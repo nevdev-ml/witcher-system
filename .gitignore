@@ -1,0 +1,7 @@
+# Project exclude paths
+/witcher-system-application/target/
+/witcher-system-boot/target/
+/witcher-system-domain/target/
+/witcher-system-infrastructure-data/target/
+/witcher-system-infrastructure-services/target/
+/witcher-system-presentation/target/

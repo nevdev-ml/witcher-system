@@ -1,0 +1,92 @@
+<div class="container">
+  <div class="card card-container">
+    <p id="profile-name" class="profile-name-card"></p>
+
+    <form name="form" (ngSubmit)="f.form.valid && register()" #f="ngForm" novalidate>
+      <div class="alert alert-danger" role="alert" *ngIf="errorMessage">{{errorMessage}}</div>
+      <span id="reauth-email" class="reauth-email"></span>
+
+      <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
+        <label for="name">Имя</label>
+        <input type="text" class="form-control" name="name" id="name" [(ngModel)]="user.name" #name="ngModel" required />
+        <div *ngIf="f.submitted && !name.valid" class="help-block">
+          Имя является обязательным полем.
+        </div>
+      </div>
+
+      <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !surname.valid }">
+        <label for="surname">Фамилия</label>
+        <input type="text" class="form-control" name="surname" id="Surname" [(ngModel)]="user.surname"
+               #surname="ngModel" required />
+        <div *ngIf="f.submitted && !surname.valid" class="help-block">
+          Фамилия является обязательным полем.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="midname">Отчество</label>
+        <input type="text" class="form-control" name="midname" id="midname" [(ngModel)]="user.midname" />
+      </div>
+
+
+      <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
+        <label for="username">Логин</label>
+        <input type="text" class="form-control" name="username" id="username" [(ngModel)]="user.username"
+               #username="ngModel" required />
+        <div *ngIf="f.submitted && !username.valid" class="help-block">
+          <div *ngIf="username.errors.required">
+            Логин является обязательным полем.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
+        <label for="password">Пароль</label>
+        <input type="password" class="form-control" name="password" id="password" [(ngModel)]="user.password"
+               #password="ngModel" required minlength="6" />
+        <div *ngIf="f.submitted && !password.valid" class="help-block">
+
+          <div *ngIf="password.errors.required">
+            Пароль является обязательным полем.
+          </div>
+          <div *ngIf="password.errors.minlength">
+            Пароль должен содержать как минимум 6 символов.
+          </div>
+
+        </div>
+<!--        <app-select-dropdown>Загрузка</app-select-dropdown>-->
+        <mat-form-field>
+          <mat-label>Роль</mat-label>
+          <mat-select [formControl]="checkedRole" required>
+            <mat-option>--</mat-option>
+            <mat-option *ngFor="let role of roles" [value]="role.name">
+              {{role.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="checkedRole.hasError('required')">Вы должны выбрать роль.</mat-error>
+          <mat-hint>Выберите предпочитаемую роль.</mat-hint>
+        </mat-form-field>
+
+
+
+
+      </div>
+      <div id="remember" class="checkbox">
+
+      </div>
+      <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">
+        Создать аккаунт
+      </button>
+      <button [routerLink]="['/login']" class="btn btn-lg btn-danger btn-block btn-cancel" type="button">
+        Вернуться
+      </button>
+
+    </form><!-- /form -->
+
+  </div><!-- /card-container -->
+</div><!-- /container -->
+
+
+
+
+
