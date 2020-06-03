@@ -17,6 +17,16 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public User findByUsernameAndPassword(String username, String password) {
+        return userRepository.findByUsernameAndPassword(username, password);
+    }
+
+    @Override
+    public User findByUsernameOrEmail(String username, String email) {
+        return userRepository.findByUsernameOrEmail(username, email);
+    }
+
+    @Override
     public User create(User model) {
         return userRepository.saveAndFlush(model);
     }

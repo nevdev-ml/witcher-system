@@ -1,7 +1,6 @@
-export class User {
+export class UserView {
   id: string;
   username = '';
-  password = '';
   firstName = '';
   lastName = '';
   email = '';

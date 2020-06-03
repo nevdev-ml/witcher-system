@@ -8,7 +8,7 @@
 
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
         <label for="name">Имя</label>
-        <input type="text" class="form-control" name="name" id="name" [(ngModel)]="user.name" #name="ngModel" required />
+        <input type="text" class="form-control" name="name" id="name" [(ngModel)]="user.firstName" #name="ngModel" required />
         <div *ngIf="f.submitted && !name.valid" class="help-block">
           Имя является обязательным полем.
         </div>
@@ -16,7 +16,7 @@
 
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !surname.valid }">
         <label for="surname">Фамилия</label>
-        <input type="text" class="form-control" name="surname" id="Surname" [(ngModel)]="user.surname"
+        <input type="text" class="form-control" name="surname" id="surname" [(ngModel)]="user.lastName"
                #surname="ngModel" required />
         <div *ngIf="f.submitted && !surname.valid" class="help-block">
           Фамилия является обязательным полем.
@@ -24,8 +24,8 @@
       </div>
 
       <div class="form-group">
-        <label for="midname">Отчество</label>
-        <input type="text" class="form-control" name="midname" id="midname" [(ngModel)]="user.midname" />
+        <label for="email">Электронная почта</label>
+        <input type="email" class="form-control" name="email" id="email" [(ngModel)]="user.email" />
       </div>
 
 

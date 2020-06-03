@@ -16,7 +16,7 @@ export class RegisterComponent implements OnInit {
   errorMessage: string;
   checkedRole = new FormControl('', Validators.required);
   roles: Role[] = [
-    {name: 'Король'},
+    {name: 'Ведьмак'},
     {name: 'Пользователь'},
     {name: 'Ремесленник'},
     {name: 'Торговец'},
@@ -29,8 +29,10 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
+    console.log(this.user);
     this.user.checkedRole = this.checkedRole.value;
-    this.accountService.createAccount(this.user).subscribe(data => {
+    this.accountService.register(this.user).subscribe(data => {
+        console.log(data);
         this.router.navigate(['/login']);
       }, err => {
         console.log(err);

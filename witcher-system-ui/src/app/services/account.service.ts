@@ -7,7 +7,7 @@ import {AppComponent} from '../app.component';
 export class AccountService {
   constructor(public http: HttpClient) { }
 
-  createAccount(user: User){
-    return this.http.post(AppComponent.API_URL + '/account/register', user);
+  register(user: User){
+    return this.http.post(AppComponent.PATH_REGISTER, user);
   }
 }

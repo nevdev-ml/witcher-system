@@ -13,13 +13,7 @@
     <dependencies>
         <dependency>
             <groupId>com.nevdev.witcher</groupId>
-            <artifactId>witcher-system-infrastructure-services</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.nevdev.witcher</groupId>
-            <artifactId>witcher-system-infrastructure-services</artifactId>
+            <artifactId>witcher-system-infrastructure-data</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
@@ -34,6 +28,11 @@
             <artifactId>witcher-system-infrastructure-services</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
         </dependency>
     </dependencies>
 
