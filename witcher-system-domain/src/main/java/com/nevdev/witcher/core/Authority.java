@@ -1,32 +1,34 @@
 package com.nevdev.witcher.core;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.nevdev.witcher.enums.Role;
+import lombok.*;
 
 import javax.persistence.*;
-import org.jetbrains.annotations.NotNull;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@ToString(of = "name")
-@Getter
-@Setter
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Authority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "authority_seq")
     @SequenceGenerator(name = "authority_seq", sequenceName = "authority_seq", allocationSize = 1)
+    @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(name = "NAME", length = 50)
+    @Column(name = "NAME", length = 50, unique = true)
     @NotNull
     @Enumerated(EnumType.STRING)
-    private Role name;
+    private Role roleName;
 
-    @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
+    @ManyToMany(
+            mappedBy = "authorities",
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnoreProperties("authorities")
     private List<User> users;
 
     public Authority(){}

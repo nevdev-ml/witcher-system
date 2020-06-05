@@ -2,7 +2,7 @@ package com.nevdev.witcher.services;
 
 import com.nevdev.witcher.application.IAuthorityService;
 import com.nevdev.witcher.core.Authority;
-import com.nevdev.witcher.core.Role;
+import com.nevdev.witcher.enums.Role;
 import com.nevdev.witcher.repository.AuthorityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,12 +14,16 @@ public class AuthorityService implements IAuthorityService {
 
     @Override
     public Authority find(Role authorityName) {
-        return authorityRepository.findByName(authorityName);
+        return authorityRepository.findByRoleName(authorityName);
     }
 
     @Override
     public Authority create(Authority model) {
-        return authorityRepository.saveAndFlush(model);
+        Authority authority = find(model.getRoleName());
+        if(authority == null){
+            return authorityRepository.saveAndFlush(model);
+        }
+        return authority;
     }
 
     @Override

@@ -1,26 +1,21 @@
 package com.nevdev.witcher.core;
 
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.context.annotation.Scope;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
-
-import java.util.Date;
-import java.util.List;
+import com.nevdev.witcher.enums.Role;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Date;
+import java.util.List;
 
 @Entity
-@Scope("session")
-@Getter
-@Setter
+@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
     @Id
@@ -52,19 +47,28 @@ public class User {
     @NotNull
     private Date lastPasswordResetDate;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JsonIgnore
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL
+    )
+    @JsonIgnoreProperties("users")
     @JoinTable(
             name = "USER_AUTHORITY",
             joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
     private List<Authority> authorities;
 
+    @ManyToMany(
+            mappedBy = "witchers",
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnoreProperties("witchers")
+    private List<Task> tasks;
 
     public User(){}
 
     public User(String username, String password, Role role, String firstName, String lastName, String email,
-                Boolean enabled, Date lastPasswordResetDate, List<Authority> authorities){
+                @NotNull Boolean enabled, @NotNull Date lastPasswordResetDate, List<Authority> authorities){
         this.username = username;
         this.password = password;
         this.role = role;
@@ -82,10 +86,5 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("User [id=%d, username=%s, password=%s, role=%s]", id, username, password, role.name());
     }
 }

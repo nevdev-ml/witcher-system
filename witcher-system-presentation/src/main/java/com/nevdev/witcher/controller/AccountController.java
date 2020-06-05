@@ -1,7 +1,7 @@
 package com.nevdev.witcher.controller;
 
 import com.nevdev.witcher.core.Authority;
-import com.nevdev.witcher.core.Role;
+import com.nevdev.witcher.enums.Role;
 import com.nevdev.witcher.core.User;
 import com.nevdev.witcher.models.UserViewModel;
 import com.nevdev.witcher.services.AuthorityService;
@@ -117,15 +117,15 @@ public class AccountController {
         user.setLastPasswordResetDate(new Date(System.currentTimeMillis()));
 
         Authority BLACKSMITH = new Authority();
-        BLACKSMITH.setName(Role.BLACKSMITH);
+        BLACKSMITH.setRoleName(Role.BLACKSMITH);
         Authority VENDOR = new Authority();
-        VENDOR.setName(Role.VENDOR);
+        VENDOR.setRoleName(Role.VENDOR);
         Authority USER = new Authority();
-        USER.setName(Role.USER);
+        USER.setRoleName(Role.USER);
         Authority KING = new Authority();
-        KING.setName(Role.KING);
+        KING.setRoleName(Role.KING);
         Authority WITCHER = new Authority();
-        WITCHER.setName(Role.WITCHER);
+        WITCHER.setRoleName(Role.WITCHER);
         authorityService.create(BLACKSMITH);
         authorityService.create(VENDOR);
         authorityService.create(USER);
@@ -139,7 +139,7 @@ public class AccountController {
         authoritiesList.add(userAuthority);
 
         user.setAuthorities(authoritiesList);
-        user.setRole(userAuthority.getName());
+        user.setRole(userAuthority.getRoleName());
         userService.create(user);
 
     }
@@ -171,7 +171,7 @@ public class AccountController {
 
         ArrayList<Authority> authorities = new ArrayList<>(userService.find(authenticationRequest.getUsername()).getAuthorities());
         List<String> authoritiesString = new ArrayList<>();
-        authorities.forEach(authority -> authoritiesString.add(authority.getName().toString()));
+        authorities.forEach(authority -> authoritiesString.add(authority.getRoleName().toString()));
 
         return ResponseEntity.ok(new JwtAuthenticationResponse(token, authoritiesString));
     }

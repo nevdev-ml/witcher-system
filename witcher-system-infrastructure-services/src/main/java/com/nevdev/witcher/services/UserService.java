@@ -28,7 +28,11 @@ public class UserService implements IUserService {
 
     @Override
     public User create(User model) {
-        return userRepository.saveAndFlush(model);
+        User user = find(model.getUsername());
+        if(user == null){
+            return userRepository.saveAndFlush(model);
+        }
+        return user;
     }
 
     @Override

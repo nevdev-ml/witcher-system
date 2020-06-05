@@ -1,7 +1,7 @@
 package com.nevdev.witcher.models;
 
 import com.nevdev.witcher.core.Authority;
-import com.nevdev.witcher.core.Role;
+import com.nevdev.witcher.enums.Role;
 import com.nevdev.witcher.core.User;
 import lombok.Getter;
 import lombok.Setter;

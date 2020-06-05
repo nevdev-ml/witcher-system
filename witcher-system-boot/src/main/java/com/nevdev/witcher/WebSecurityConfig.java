@@ -91,6 +91,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/account/register","/account/login", "/account/logout").permitAll()
+                .antMatchers("/task/tasks", "/task/details/**","/task/create", "/task/quests", "/task/accept/**").permitAll() //TODO
 //                .antMatchers("/api/loan-request").hasRole("USER")
 //                .antMatchers("/api/loan-request/**").hasAnyRole("CLIENT", "MANAGER")
                 .anyRequest().authenticated()
