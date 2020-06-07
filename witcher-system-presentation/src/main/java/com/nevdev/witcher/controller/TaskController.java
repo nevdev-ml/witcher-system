@@ -5,6 +5,7 @@ import com.nevdev.witcher.enums.Bestiary;
 import com.nevdev.witcher.enums.Currency;
 import com.nevdev.witcher.enums.Region;
 import com.nevdev.witcher.enums.Role;
+import com.nevdev.witcher.models.TaskCreateViewModel;
 import com.nevdev.witcher.models.TaskViewModel;
 import com.nevdev.witcher.services.TaskService;
 import com.nevdev.witcher.services.UserService;
@@ -46,129 +47,163 @@ public class TaskController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "/tasks") //TODO: ANY ROLE
-    public Iterable<Task> index(){
-        buildMock();
-        return taskService.find(false);
-    }
-
-    @GetMapping(value = "/create") //TODO: IF ROLE IS USER
-    public ResponseEntity<?> create(@RequestBody TaskViewModel task, @RequestHeader("Authorization") String token){
+    @PostMapping(value = "/tasks")
+    public ResponseEntity<?> tasks(@RequestHeader("Authorization") String token){//HttpServletRequest request){
         String username = jwtTokenUtil.getUsernameFromToken(token);
         User user = userService.find(username);
-        if (user != null) {
-            switch (task.getCheckedLocation()){
-                case "Аэдирн":
-                    task.setLocation(new Location(Region.AEDIRN));
-                    break;
-                case "Брокилон":
-                    task.setLocation(new Location(Region.BROKILON));
-                    break;
-                case "Цидарис":
-                    task.setLocation(new Location(Region.CIDARIS));
-                    break;
-                case "Цинтра":
-                    task.setLocation(new Location(Region.CINTRA));
-                    break;
-                case "Хенгфорс":
-                    task.setLocation(new Location(Region.HENGFORS));
-                    break;
-                case "Каэдвен":
-                    task.setLocation(new Location(Region.KAEDWEN));
-                    break;
-                case "Ковир":
-                    task.setLocation(new Location(Region.KOVIR));
-                    break;
-                case "Лирия":
-                    task.setLocation(new Location(Region.LYRIA));
-                    break;
-                case "Редания":
-                    task.setLocation(new Location(Region.REDANIA));
-                    break;
-                case "Скеллиге":
-                    task.setLocation(new Location(Region.SKELLIGE));
-                    break;
-                case "Темерия":
-                    task.setLocation(new Location(Region.TEMERIA));
-                    break;
-                default:
-                    task.setLocation(new Location(Region.VERDEN));
-                    break;
-            }
-            switch (task.getCheckedCurrency()){
-                case "Орен":
-                    task.setReward(new Reward(task.getRewardValue(), Currency.OREN));
-                    break;
-                case "Крона":
-                    task.setReward(new Reward(task.getRewardValue(), Currency.CROWN));
-                    break;
-                default:
-                    task.setReward(new Reward(task.getRewardValue(), Currency.DUCAT));
-                    break;
-            }
-            switch (task.getCheckedBeast()){
-                case "Альп":
-                    task.setBeasts(new ArrayList<>(Collections.singletonList(new Beast(Bestiary.ALP))));
-                    break;
-                case "Василиск":
-                    task.setBeasts(new ArrayList<>(Collections.singletonList(new Beast(Bestiary.BASILISK))));
-                    break;
-                case "Брукса":
-                    task.setBeasts(new ArrayList<>(Collections.singletonList(new Beast(Bestiary.BRUXA))));
-                    break;
-                case "Драконид":
-                    task.setBeasts(new ArrayList<>(Collections.singletonList(new Beast(Bestiary.DRACONID))));
-                    break;
-                case "Утопец":
-                    task.setBeasts(new ArrayList<>(Collections.singletonList(new Beast(Bestiary.DROWNER))));
-                    break;
-                case "Гуль":
-                    task.setBeasts(new ArrayList<>(Collections.singletonList(new Beast(Bestiary.GHOUL))));
-                    break;
-                case "Голем":
-                    task.setBeasts(new ArrayList<>(Collections.singletonList(new Beast(Bestiary.GOLEM))));
-                    break;
-                case "Кикимора":
-                    task.setBeasts(new ArrayList<>(Collections.singletonList(new Beast(Bestiary.KIKIMORE))));
-                    break;
-                case "Ночница":
-                    task.setBeasts(new ArrayList<>(Collections.singletonList(new Beast(Bestiary.NIGHTWRAITH))));
-                    break;
-                case "Стрыга":
-                    task.setBeasts(new ArrayList<>(Collections.singletonList(new Beast(Bestiary.STRIGA))));
-                    break;
-                case "Виверна":
-                    task.setBeasts(new ArrayList<>(Collections.singletonList(new Beast(Bestiary.WYVERN))));
-                    break;
-                default:
-                    task.setBeasts(new ArrayList<>(Collections.singletonList(new Beast(Bestiary.OTHER))));
-                    break;
-            }
-            task.setCustomerId(user.getId());
-            Task created = taskService.create(task);
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()
-                    .path("/details/{id}")
-                    .buildAndExpand(created.getId())
-                    .toUri();
-            return ResponseEntity.created(location).body(created);
+        if(user != null){
+            List<TaskViewModel> tasks = new ArrayList<>();
+            taskService.find(false).forEach((item) -> tasks.add(new TaskViewModel(item,
+                    userService.get(item.getCustomerId()),
+                    userService.get(item.getWitcherId()))
+            ));
+            logger.info("Get all tasks");
+            return ResponseEntity.ok(tasks);
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping(value = "/details/{id}") //TODO: ANY ROLE
+    @PostMapping(value = "/quests") //TODO: IF ROLE IS WITCHER
+    public ResponseEntity<?> quests(@RequestHeader("Authorization") String token){
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        User user = userService.find(username);
+        if(user != null){
+            List<TaskViewModel> tasks = new ArrayList<>();
+            taskService.getAllQuests(user.getId()).forEach((item) -> tasks.add(new TaskViewModel(item,
+                    userService.get(item.getCustomerId()),
+                    userService.get(item.getWitcherId()))
+            ));
+            logger.info("Get all witcher tasks");
+            return ResponseEntity.ok(tasks);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping(value = "/add")
+    public ResponseEntity<?> add(@RequestBody TaskCreateViewModel taskRequest, @RequestHeader("Authorization") String token){
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        User user = userService.find(username);
+        if (user != null) {
+            Reward reward;
+            Location location;
+            List<Beast> beasts;
+            switch (taskRequest.getCheckedLocation()){
+                case "Аэдирн":
+                    location = new Location(Region.AEDIRN);
+                    break;
+                case "Брокилон":
+                    location = new Location(Region.BROKILON);
+                    break;
+                case "Цидарис":
+                    location = new Location(Region.CIDARIS);
+                    break;
+                case "Цинтра":
+                    location = new Location(Region.CINTRA);
+                    break;
+                case "Хенгфорс":
+                    location = new Location(Region.HENGFORS);
+                    break;
+                case "Каэдвен":
+                    location = new Location(Region.KAEDWEN);
+                    break;
+                case "Ковир":
+                    location = new Location(Region.KOVIR);
+                    break;
+                case "Лирия":
+                    location = new Location(Region.LYRIA);
+                    break;
+                case "Редания":
+                    location = new Location(Region.REDANIA);
+                    break;
+                case "Скеллиге":
+                    location = new Location(Region.SKELLIGE);
+                    break;
+                case "Темерия":
+                    location = new Location(Region.TEMERIA);
+                    break;
+                default:
+                    location = new Location(Region.VERDEN);
+                    break;
+            }
+            switch (taskRequest.getCheckedCurrency()){
+                case "Орен":
+                    reward = new Reward(taskRequest.getCheckedRewardValue(), Currency.OREN);
+                    break;
+                case "Крона":
+                    reward = new Reward(taskRequest.getCheckedRewardValue(), Currency.CROWN);
+                    break;
+                default:
+                    reward = new Reward(taskRequest.getCheckedRewardValue(), Currency.DUCAT);
+                    break;
+            }
+            switch (taskRequest.getCheckedBeast()){
+                case "Альп":
+                    beasts = new ArrayList<>(Collections.singletonList(new Beast(Bestiary.ALP)));
+                    break;
+                case "Василиск":
+                    beasts = new ArrayList<>(Collections.singletonList(new Beast(Bestiary.BASILISK)));
+                    break;
+                case "Брукса":
+                    beasts = new ArrayList<>(Collections.singletonList(new Beast(Bestiary.BRUXA)));
+                    break;
+                case "Драконид":
+                    beasts = new ArrayList<>(Collections.singletonList(new Beast(Bestiary.DRACONID)));
+                    break;
+                case "Утопец":
+                    beasts = new ArrayList<>(Collections.singletonList(new Beast(Bestiary.DROWNER)));
+                    break;
+                case "Гуль":
+                    beasts = new ArrayList<>(Collections.singletonList(new Beast(Bestiary.GHOUL)));
+                    break;
+                case "Голем":
+                    beasts = new ArrayList<>(Collections.singletonList(new Beast(Bestiary.GOLEM)));
+                    break;
+                case "Кикимора":
+                    beasts = new ArrayList<>(Collections.singletonList(new Beast(Bestiary.KIKIMORE)));
+                    break;
+                case "Ночница":
+                    beasts = new ArrayList<>(Collections.singletonList(new Beast(Bestiary.NIGHTWRAITH)));
+                    break;
+                case "Стрыга":
+                    beasts = new ArrayList<>(Collections.singletonList(new Beast(Bestiary.STRIGA)));
+                    break;
+                case "Виверна":
+                    beasts = new ArrayList<>(Collections.singletonList(new Beast(Bestiary.WYVERN)));
+                    break;
+                default:
+                    beasts = new ArrayList<>(Collections.singletonList(new Beast(Bestiary.OTHER)));
+                    break;
+            }
+            Task task = new Task(taskRequest.getTitle(), taskRequest.getLocationComment(), location, reward,
+                    user.getId(), beasts);
+            Task created = taskService.create(task);
+            URI uri = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/details/{id}")
+                    .buildAndExpand(created.getId())
+                    .toUri();
+            ResponseEntity<?> t = ResponseEntity.created(uri).body(created);
+            logger.info(String.format("Created task on %s", uri));
+            return ResponseEntity.created(uri).body(created);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping(value = "/details/{id}")
     public ResponseEntity<?> details(HttpServletRequest request,  @PathVariable long id){
         String token = request.getHeader(tokenHeader);
         String username = jwtTokenUtil.getUsernameFromToken(token);
         User user = userService.find(username);
         Task task = taskService.get(id);
         if(user != null && task != null){
-            return ResponseEntity.ok(task);
+            logger.info("Get task");
+            return ResponseEntity.ok(new TaskViewModel(task, userService.get(task.getCustomerId()),
+                    userService.get(task.getWitcherId())));
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping(value = "/accept/{id}") //TODO: IF ROLE IS WITCHER
+    @PostMapping(value = "/accept/{id}")
     public ResponseEntity<?> accept(HttpServletRequest request,  @PathVariable long id){
         String token = request.getHeader(tokenHeader);
         String username = jwtTokenUtil.getUsernameFromToken(token);
@@ -177,23 +212,26 @@ public class TaskController {
         if(user != null && task != null){
             task.getWitchers().add(user);
             taskService.edit(task);
+            logger.info("Accept task");
             return ResponseEntity.ok(task);
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
-
-    @GetMapping(value = "/quests") //TODO: IF ROLE IS WITCHER
-    public ResponseEntity<?> quests(HttpServletRequest request){
+    @PostMapping(value = "/cancel/{id}")
+    public ResponseEntity<?> cancel(HttpServletRequest request,  @PathVariable long id){
         String token = request.getHeader(tokenHeader);
         String username = jwtTokenUtil.getUsernameFromToken(token);
         User user = userService.find(username);
-        if(user != null){
-            return ResponseEntity.ok(taskService.getAllQuests(user.getId()));
+        Task task = taskService.get(id);
+        if(user != null && task != null){
+            task.getWitchers().remove(user);
+            taskService.edit(task);
+            logger.info("Cancel task");
+            return ResponseEntity.ok(task);
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
-
 
     private void buildMock(){ //TODO: Mock data
         String title = "Нужно убить этих чертовых эльфов!";

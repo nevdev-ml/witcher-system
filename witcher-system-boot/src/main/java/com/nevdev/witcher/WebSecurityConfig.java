@@ -91,11 +91,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/account/register","/account/login", "/account/logout").permitAll()
-                .antMatchers("/task/tasks", "/task/details/**","/task/create", "/task/quests", "/task/accept/**").permitAll() //TODO
-//                .antMatchers("/api/loan-request").hasRole("USER")
-//                .antMatchers("/api/loan-request/**").hasAnyRole("CLIENT", "MANAGER")
-                .anyRequest().authenticated()
-                //To enable h2 console
+                .antMatchers("/task/details/**").permitAll()//.hasAuthority("USER")
+                .antMatchers("/task/add").hasAnyAuthority("USER", "KING")
+                .antMatchers("/task/accept/**", "/task/cancel/**", "/task/quests").hasAuthority("WITCHER")
+                .antMatchers("/task/tasks").permitAll() //TODO
+                .anyRequest().hasAnyAuthority("USER", "KING", "BLACKSMITH", "VENDOR", "WITCHER")
+                // Enable h2 console
                 .and().headers().frameOptions().disable();
         // Custom JWT based security filter
         httpSecurity

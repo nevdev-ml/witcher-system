@@ -36,6 +36,9 @@ public class RewardService implements IRewardService {
 
     @Override
     public Reward get(Long id) {
+        if (id == null){
+            return null;
+        }
         return rewardRepository.findById(id).orElse(null);
     }
 

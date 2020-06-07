@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 
 import { AppComponent } from './app.component';
 
@@ -15,13 +15,30 @@ import {UrlPermission} from './permission/permission';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
+import { TaskComponent } from './components/task/task.component';
+
+// Override to russian
+import localeRu from '@angular/common/locales/ru';
+import { registerLocaleData } from '@angular/common';
+import { TasksComponent } from './components/tasks/tasks.component';
+import { SelectDropdownComponent } from './components/select-dropdown/select-dropdown.component';
+import {MatTableModule} from '@angular/material/table';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatSortModule} from '@angular/material/sort';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TaskCreateComponent } from './components/task.create/task.create.component';
+registerLocaleData(localeRu);
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    ProfileComponent
+    ProfileComponent,
+    TaskComponent,
+    TasksComponent,
+    SelectDropdownComponent,
+    TaskCreateComponent
   ],
   imports: [
     BrowserModule,
@@ -32,8 +49,12 @@ import {MatSelectModule} from '@angular/material/select';
     MatFormFieldModule,
     MatSelectModule,
     ReactiveFormsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    FontAwesomeModule
   ],
-  providers: [AuthService, AccountService, UrlPermission],
+  providers: [AuthService, AccountService, UrlPermission, { provide: LOCALE_ID, useValue: 'ru' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

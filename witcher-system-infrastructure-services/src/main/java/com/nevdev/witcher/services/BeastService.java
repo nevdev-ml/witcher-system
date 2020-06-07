@@ -38,6 +38,9 @@ public class BeastService implements IBeastService {
 
     @Override
     public Beast get(Long id) {
+        if (id == null){
+            return null;
+        }
         return beastRepository.findById(id).orElse(null);
     }
 

@@ -1,8 +1,8 @@
 export class UserView {
   id: string;
-  username = '';
-  firstName = '';
-  lastName = '';
-  email = '';
-  checkedRole = '';
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  checkedRole: string;
 }

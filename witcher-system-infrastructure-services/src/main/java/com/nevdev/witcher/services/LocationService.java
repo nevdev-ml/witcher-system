@@ -38,6 +38,9 @@ public class LocationService implements ILocationService {
 
     @Override
     public Location get(Long id) {
+        if (id == null){
+            return null;
+        }
         return locationRepository.findById(id).orElse(null);
     }
 

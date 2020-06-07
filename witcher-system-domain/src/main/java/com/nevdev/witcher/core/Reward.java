@@ -43,7 +43,7 @@ public class Reward {
     public Reward() {}
 
     public Reward(@NotNull Double reward, @NotNull Currency type){
-        this.reward = reward;
+        this.reward = reward - (reward * taxConstant);
         this.tax = reward * taxConstant;
         this.type = type;
     }

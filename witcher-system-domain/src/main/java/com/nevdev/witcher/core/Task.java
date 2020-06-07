@@ -95,4 +95,20 @@ public class Task {
         this.customerId = customerId;
         this.beasts = beasts;
     }
+
+    public Task(Task task){
+        id = task.id;
+        createOn = task.createOn;
+        done = task.done;
+        paid = task.paid;
+        title = task.title;
+        locationComment = task.locationComment;
+        location = task.location;
+        reward = task.reward;
+        customerId = task.customerId;
+        beasts = task.beasts;
+        completionOn = task.completionOn;
+        witcherId = task.witcherId;
+        witchers = task.witchers;
+    }
 }

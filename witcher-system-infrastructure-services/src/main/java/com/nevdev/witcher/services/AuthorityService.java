@@ -38,6 +38,9 @@ public class AuthorityService implements IAuthorityService {
 
     @Override
     public Authority get(Long id) {
+        if (id == null){
+            return null;
+        }
         return authorityRepository.findById(id).orElse(null);
     }
 

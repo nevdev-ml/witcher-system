@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit {
   login(){
     this.authService.login(this.user)
       .subscribe(response => {
+        console.log(response);
         localStorage.setItem(AppComponent.TOKEN, response.token);
         localStorage.setItem(AppComponent.ROLES, response.authorities);
         this.router.navigate(['/profile']).then(() => console.log('Success login'));

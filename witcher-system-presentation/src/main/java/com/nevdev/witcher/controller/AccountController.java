@@ -26,6 +26,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -88,7 +89,9 @@ public class AccountController {
         user.setLastPasswordResetDate(new Date(System.currentTimeMillis()));
         user.setEnabled(true);
 
-        Authority userAuthority = authorityService.find(user.getRole());
+        Authority authority = new Authority();
+        authority.setRoleName(user.getRole());
+        Authority userAuthority = authorityService.create(authority);
         List<Authority> authoritiesList = new ArrayList<>();
         authoritiesList.add(userAuthority);
         user.setAuthorities(authoritiesList);
@@ -148,6 +151,11 @@ public class AccountController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody JwtAuthenticationRequest authenticationRequest,
                                                        Device device) throws AuthenticationException {
+        if (!new BCryptPasswordEncoder().matches(authenticationRequest.getPassword(),
+                userService.find(authenticationRequest.getUsername()).getPassword())) {
+            logger.error("Failed to authenticate: Wrong username or password");
+            return ResponseEntity.badRequest().body(null);
+        }
         if (device.isMobile()) {
             logger.info("Hello mobile user!");
         } else if (device.isTablet()) {
@@ -155,14 +163,13 @@ public class AccountController {
         } else {
             logger.info("Hello desktop user!");
         }
-        // addBuiltInUser(authenticationRequest.getUsername(), authenticationRequest.getPassword(), Role.USER);
-
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authenticationRequest.getUsername(),
                         authenticationRequest.getPassword()
                 )
         );
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // Reload password post-security so we can generate token

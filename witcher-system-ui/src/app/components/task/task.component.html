@@ -1,0 +1,24 @@
+<div *ngIf="isDataAvailable">
+  <p>Описание: {{task.title}}</p>
+  <p>Локация: {{task.location.region}}</p>
+  <p *ngIf="task.locationComment">Комментарии: {{task.locationComment}}</p>
+  <p>Бестии:</p>
+  <ul>
+    <li *ngFor="let item of task.beasts">{{item.beastName}}</li>
+  </ul>
+  <p>Дата создания: {{task.createOn | date:'longDate'}}</p>
+  <p *ngIf="task.completionOn">Дата выполнения: {{task.completionOn | date:'longDate'}}</p>
+  <p>Заказчик: {{task.customer.firstName}} {{task.customer.lastName}}</p>
+  <p *ngIf="task.witcher">Заказ выполнил: {{task.witcher.firstName}} {{task.witcher.lastName}}</p>
+  <p>Награда: {{task.reward.reward}} {{task.reward.type}}, с вычетом налога: {{task.reward.tax}} {{task.reward.type}}</p>
+  <p *ngIf="task.done">Статус заказа: Выполнено</p>
+  <p *ngIf="!task.done">Статус заказа: Не выполнено</p>
+  <p *ngIf="task.paid">Статус оплаты: Оплачено</p>
+  <p *ngIf="!task.paid">Статус оплаты: Не оплачено</p>
+  <p>Номер заказа: {{task.id}}</p>
+  <button *ngIf="role == 'WITCHER' && !task.done && !isContainsWitcher(task.witchers)" (click)="accept()">Принять задание</button>
+  <button *ngIf="role == 'WITCHER' && !task.done && isContainsWitcher(task.witchers)" (click)="cancel()">Отменить задание</button>
+  <button *ngIf="role == 'KING'" (click)="edit(task)">Редактировать задание</button>
+  <button (click)="backToTasks()">Список всех заданий</button>
+  <button *ngIf="role == 'WITCHER'" (click)="backToQuests()">Список принятых заданий</button>
+</div>

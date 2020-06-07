@@ -1,0 +1,36 @@
+<form name="form" (ngSubmit)="f.form.valid && add()" #f="ngForm" novalidate>
+  <div role="alert" *ngIf="errorMessage">{{errorMessage}}</div>
+
+  <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !title.valid }">
+    <label for="title">Название заказа</label>
+    <input type="text" class="form-control" name="title" id="title" [(ngModel)]="task.title" #title="ngModel" required />
+    <div *ngIf="f.submitted && !title.valid" class="help-block">
+      Название заказа является обязательным полем
+    </div>
+  </div>
+
+  <app-select-dropdown [objectList]="locations" [title]="titleLocation" (changed)="onChangedLocation($event)"></app-select-dropdown>
+
+  <div class="form-group">
+    <label for="locationComment">Комментарии к заказу</label>
+    <input type="text" class="form-control" name="locationComment" id="locationComment"
+           [(ngModel)]="task.locationComment"/>
+  </div>
+
+  <app-select-dropdown [objectList]="currency" [title]="titleCurrency"  (changed)="onChangedCurrency($event)"></app-select-dropdown>
+
+  <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !checkedRewardValue.valid }">
+    <label for="checkedRewardValue">Введите сумму награды</label>
+    <input type="number" class="form-control" name="checkedRewardValue" id="checkedRewardValue"
+           [(ngModel)]="task.checkedRewardValue" #checkedRewardValue="ngModel" required min="0"/>
+    <div *ngIf="f.submitted && !checkedRewardValue.valid" class="help-block">
+      Сумма награды за заказ является обязательным полем
+    </div>
+  </div>
+
+  <app-select-dropdown [objectList]="beasts" [title]="titleBeast" (changed)="onChangedBeast($event)"></app-select-dropdown>
+
+
+  <button type="submit">Создать заказ</button>
+  <button (click)="back()">Вернуться</button>
+</form>

@@ -47,6 +47,9 @@ public class UserService implements IUserService {
 
     @Override
     public User get(Long id) {
+        if (id == null){
+            return null;
+        }
         return userRepository.findById(id).orElse(null);
     }
 

@@ -1,4 +1,4 @@
 export class Token {
-  token = '';
-  authorities = '';
+  token: string;
+  authorities: string;
 }

@@ -67,6 +67,9 @@ public class TaskService implements ITaskService {
 
     @Override
     public Task get(Long id) {
+        if (id == null){
+            return null;
+        }
         return taskRepository.findById(id).orElse(null);
     }
 

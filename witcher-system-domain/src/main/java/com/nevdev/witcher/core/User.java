@@ -48,7 +48,7 @@ public class User {
     private Date lastPasswordResetDate;
 
     @ManyToMany(
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             cascade = CascadeType.ALL
     )
     @JsonIgnoreProperties("users")

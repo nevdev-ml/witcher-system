@@ -29,13 +29,6 @@ export class AuthService implements HttpInterceptor {
   }
 
   logout() {
-    // return this.http.get(AppComponent.PATH_LOGOUT)
-    //   .pipe(map((response: HttpResponse<any>) => {
-    //     console.log('hello');
-    //     console.log(response);
-    //     localStorage.removeItem(AppComponent.TOKEN);
-    //     localStorage.removeItem(AppComponent.ROLES);
-    //   }));
     return this.http.get(AppComponent.PATH_LOGOUT, {});
   }
 
