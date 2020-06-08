@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import {User} from '../models/model.user';
 import {HttpClient} from '@angular/common/http';
-import {AppComponent} from '../app.component';
+import {Constants} from '../utils/constants';
 
 @Injectable()
 export class AccountService {
   constructor(public http: HttpClient) { }
 
   register(user: User){
-    return this.http.post(AppComponent.PATH_REGISTER, user);
+    return this.http.post(Constants.PATH_REGISTER, user);
   }
 }

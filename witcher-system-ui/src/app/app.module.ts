@@ -16,6 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import { TaskComponent } from './components/task/task.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Override to russian
 import localeRu from '@angular/common/locales/ru';
@@ -27,6 +28,14 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TaskCreateComponent } from './components/task.create/task.create.component';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {MatInputModule} from '@angular/material/input';
+import {MatIconModule} from '@angular/material/icon';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatListModule} from '@angular/material/list';
+import { HomeComponent } from './components/home/home.component';
 registerLocaleData(localeRu);
 
 @NgModule({
@@ -38,7 +47,8 @@ registerLocaleData(localeRu);
     TaskComponent,
     TasksComponent,
     SelectDropdownComponent,
-    TaskCreateComponent
+    TaskCreateComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -52,7 +62,15 @@ registerLocaleData(localeRu);
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatCardModule,
+    MatInputModule,
+    FlexLayoutModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatListModule
   ],
   providers: [AuthService, AccountService, UrlPermission, { provide: LOCALE_ID, useValue: 'ru' }],
   bootstrap: [AppComponent]

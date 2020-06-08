@@ -17,9 +17,4 @@ export class TaskViewModel {
   witchers: TaskUserModel[];
   customer: TaskUserModel;
   witcher: TaskUserModel;
-
-  checkedLocation: string;
-  checkedCurrency: string;
-  checkedRewardValue: string;
-  checkedBeast: string;
 }

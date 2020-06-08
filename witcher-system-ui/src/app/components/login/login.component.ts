@@ -2,7 +2,8 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {User} from '../../models/model.user';
 import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
-import {AppComponent} from '../../app.component';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Constants} from '../../utils/constants';
 
 
 @Component({
@@ -14,8 +15,15 @@ import {AppComponent} from '../../app.component';
 export class LoginComponent implements OnInit {
   user: User = new User();
   errorMessage: string;
+  form: FormGroup;
+  hide = true;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) {
+    this.form = new FormGroup({
+      username: new FormControl('', Validators.required),
+      password: new FormControl('', Validators.required)
+    });
+  }
 
 
 
@@ -25,9 +33,9 @@ export class LoginComponent implements OnInit {
   login(){
     this.authService.login(this.user)
       .subscribe(response => {
-        console.log(response);
-        localStorage.setItem(AppComponent.TOKEN, response.token);
-        localStorage.setItem(AppComponent.ROLES, response.authorities);
+        localStorage.setItem(Constants.TOKEN, response.token);
+        localStorage.setItem(Constants.ROLES, response.authorities);
+        localStorage.setItem(Constants.ID, response.id);
         this.router.navigate(['/profile']).then(() => console.log('Success login'));
       }, error => {
         console.log(error);

@@ -1,24 +1,133 @@
-<div *ngIf="isDataAvailable">
-  <p>Описание: {{task.title}}</p>
-  <p>Локация: {{task.location.region}}</p>
-  <p *ngIf="task.locationComment">Комментарии: {{task.locationComment}}</p>
-  <p>Бестии:</p>
-  <ul>
-    <li *ngFor="let item of task.beasts">{{item.beastName}}</li>
-  </ul>
-  <p>Дата создания: {{task.createOn | date:'longDate'}}</p>
-  <p *ngIf="task.completionOn">Дата выполнения: {{task.completionOn | date:'longDate'}}</p>
-  <p>Заказчик: {{task.customer.firstName}} {{task.customer.lastName}}</p>
-  <p *ngIf="task.witcher">Заказ выполнил: {{task.witcher.firstName}} {{task.witcher.lastName}}</p>
-  <p>Награда: {{task.reward.reward}} {{task.reward.type}}, с вычетом налога: {{task.reward.tax}} {{task.reward.type}}</p>
-  <p *ngIf="task.done">Статус заказа: Выполнено</p>
-  <p *ngIf="!task.done">Статус заказа: Не выполнено</p>
-  <p *ngIf="task.paid">Статус оплаты: Оплачено</p>
-  <p *ngIf="!task.paid">Статус оплаты: Не оплачено</p>
-  <p>Номер заказа: {{task.id}}</p>
-  <button *ngIf="role == 'WITCHER' && !task.done && !isContainsWitcher(task.witchers)" (click)="accept()">Принять задание</button>
-  <button *ngIf="role == 'WITCHER' && !task.done && isContainsWitcher(task.witchers)" (click)="cancel()">Отменить задание</button>
-  <button *ngIf="role == 'KING'" (click)="edit(task)">Редактировать задание</button>
-  <button (click)="backToTasks()">Список всех заданий</button>
-  <button *ngIf="role == 'WITCHER'" (click)="backToQuests()">Список принятых заданий</button>
+<div *ngIf="isDataAvailable" class="task-block" fxLayout="column" fxLayoutAlign="center start">
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">Номер заказа:</span>
+    </div>
+    <div fxFlex>
+      <p>{{task.id}}</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">Описание:</span>
+    </div>
+    <div fxFlex>
+      <p>{{task.title}}</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">Локация:</span>
+    </div>
+    <div fxFlex>
+      <p>{{task.location.region}}</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container" *ngIf="task.locationComment">
+    <div fxFlex="40">
+      <span class="title">Комментарии:</span>
+    </div>
+    <div fxFlex>
+      <p>{{task.locationComment}}</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">Бестии:</span>
+    </div>
+    <div fxFlex>
+      <span *ngFor="let item of task.beasts">{{item.beastName}}
+        <span *ngIf="task.beasts.indexOf(item) !== (task.beasts.length - 1)">, </span>
+      </span>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">Дата создания:</span>
+    </div>
+    <div fxFlex>
+      <p>{{task.createOn | date:'longDate'}}</p>
+    </div>
+  </div>
+
+
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container" *ngIf="task.completionOn">
+    <div fxFlex="40">
+      <span class="title">Дата создания:</span>
+    </div>
+    <div fxFlex>
+      <p>{{task.completionOn | date:'longDate'}}</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">Заказчик:</span>
+    </div>
+    <div fxFlex>
+      <p>{{task.customer.firstName}} {{task.customer.lastName}}</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container" *ngIf="task.witcher">
+    <div fxFlex="40">
+      <span class="title">Заказ выполнил:</span>
+    </div>
+    <div fxFlex>
+      <p>{{task.witcher.firstName}} {{task.witcher.lastName}}</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">Награда:</span>
+    </div>
+    <div fxFlex>
+      <p>{{task.reward.reward}} {{task.reward.type}}</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">C вычетом налога:</span>
+    </div>
+    <div fxFlex>
+      <p>{{task.reward.tax}} {{task.reward.type}}</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">Статус заказа:</span>
+    </div>
+    <div fxFlex>
+      <p *ngIf="task.done">Выполнено</p>
+      <p *ngIf="!task.done">Не выполнено</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">Статус оплаты:</span>
+    </div>
+    <div fxFlex>
+      <p *ngIf="task.paid">Оплачено</p>
+      <p *ngIf="!task.paid">Не оплачено</p>
+    </div>
+  </div>
+
+  <button *ngIf="role == 'WITCHER' && !task.done && !isContainsWitcher(task.witchers)" mat-stroked-button
+          class="btn-block" (click)="accept()">Принять задание</button>
+  <button *ngIf="role == 'WITCHER' && !task.done && isContainsWitcher(task.witchers)" mat-stroked-button
+          class="btn-block" (click)="cancel()">Отменить задание</button>
+  <button *ngIf="role == 'KING'" mat-stroked-button class="btn-block" (click)="edit(task)">Редактировать задание</button>
+  <button mat-stroked-button class="btn-block" (click)="backToTasks()">Список заданий</button>
+  <button *ngIf="role == 'WITCHER'" mat-stroked-button class="btn-block" (click)="backToQuests()">Список принятых заданий</button>
 </div>

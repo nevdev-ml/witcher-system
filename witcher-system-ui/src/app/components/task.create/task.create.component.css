@@ -1,0 +1,13 @@
+.task-block {
+  background: white;
+  position: absolute;
+  top: 50px;
+  padding: 50px;
+  left: 40%;
+}
+.title {
+  font-weight: 500;
+}
+.flex-container {
+  width: 100%
+}

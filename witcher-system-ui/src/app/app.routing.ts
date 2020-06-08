@@ -6,6 +6,7 @@ import {UrlPermission} from './permission/permission';
 import {TaskComponent} from './components/task/task.component';
 import {TasksComponent} from './components/tasks/tasks.component';
 import {TaskCreateComponent} from './components/task.create/task.create.component';
+import {HomeComponent} from './components/home/home.component';
 
 
 const appRoutes: Routes = [
@@ -17,6 +18,8 @@ const appRoutes: Routes = [
   { path: 'tasks', component: TasksComponent, canActivate: [UrlPermission] },
   { path: 'quests', component: TasksComponent, canActivate: [UrlPermission] },
   { path: 'add', component: TaskCreateComponent, canActivate: [UrlPermission] },
+
+  { path: '', pathMatch: 'full', component: HomeComponent },
 
   { path: '**', redirectTo: '/login' }
 ];

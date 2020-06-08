@@ -47,7 +47,7 @@ public class TaskController {
         this.userService = userService;
     }
 
-    @PostMapping(value = "/tasks")
+    @RequestMapping(value = "/tasks")
     public ResponseEntity<?> tasks(@RequestHeader("Authorization") String token){//HttpServletRequest request){
         String username = jwtTokenUtil.getUsernameFromToken(token);
         User user = userService.find(username);
@@ -63,7 +63,7 @@ public class TaskController {
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(value = "/quests") //TODO: IF ROLE IS WITCHER
+    @RequestMapping(value = "/quests") //TODO: IF ROLE IS WITCHER
     public ResponseEntity<?> quests(@RequestHeader("Authorization") String token){
         String username = jwtTokenUtil.getUsernameFromToken(token);
         User user = userService.find(username);
@@ -79,7 +79,7 @@ public class TaskController {
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(value = "/add")
+    @RequestMapping(value = "/add")
     public ResponseEntity<?> add(@RequestBody TaskCreateViewModel taskRequest, @RequestHeader("Authorization") String token){
         String username = jwtTokenUtil.getUsernameFromToken(token);
         User user = userService.find(username);
@@ -189,7 +189,7 @@ public class TaskController {
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping(value = "/details/{id}")
+    @RequestMapping(value = "/details/{id}")
     public ResponseEntity<?> details(HttpServletRequest request,  @PathVariable long id){
         String token = request.getHeader(tokenHeader);
         String username = jwtTokenUtil.getUsernameFromToken(token);
@@ -203,7 +203,7 @@ public class TaskController {
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(value = "/accept/{id}")
+    @RequestMapping(value = "/accept/{id}")
     public ResponseEntity<?> accept(HttpServletRequest request,  @PathVariable long id){
         String token = request.getHeader(tokenHeader);
         String username = jwtTokenUtil.getUsernameFromToken(token);
@@ -218,7 +218,7 @@ public class TaskController {
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(value = "/cancel/{id}")
+    @RequestMapping(value = "/cancel/{id}")
     public ResponseEntity<?> cancel(HttpServletRequest request,  @PathVariable long id){
         String token = request.getHeader(tokenHeader);
         String username = jwtTokenUtil.getUsernameFromToken(token);

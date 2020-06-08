@@ -1,8 +1,8 @@
 package com.nevdev.witcher.controller;
 
 import com.nevdev.witcher.core.Authority;
-import com.nevdev.witcher.enums.Role;
 import com.nevdev.witcher.core.User;
+import com.nevdev.witcher.enums.Role;
 import com.nevdev.witcher.models.UserViewModel;
 import com.nevdev.witcher.services.AuthorityService;
 import com.nevdev.witcher.services.UserService;
@@ -99,7 +99,7 @@ public class AccountController {
     }
 
 
-    @GetMapping(value = "/profile")
+    @RequestMapping(value = "/profile")
     public User profile(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader);
         String username = jwtTokenUtil.getUsernameFromToken(token);
@@ -148,13 +148,17 @@ public class AccountController {
     }
 
 
-    @PostMapping("/login")
+    @RequestMapping("/login")
     public ResponseEntity<?> login(@RequestBody JwtAuthenticationRequest authenticationRequest,
                                                        Device device) throws AuthenticationException {
+        if (authenticationRequest.getUsername() == null || authenticationRequest.getPassword() == null){
+            logger.error("Failed to authenticate: Empty username or password");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
         if (!new BCryptPasswordEncoder().matches(authenticationRequest.getPassword(),
                 userService.find(authenticationRequest.getUsername()).getPassword())) {
             logger.error("Failed to authenticate: Wrong username or password");
-            return ResponseEntity.badRequest().body(null);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         if (device.isMobile()) {
             logger.info("Hello mobile user!");
@@ -180,7 +184,8 @@ public class AccountController {
         List<String> authoritiesString = new ArrayList<>();
         authorities.forEach(authority -> authoritiesString.add(authority.getRoleName().toString()));
 
-        return ResponseEntity.ok(new JwtAuthenticationResponse(token, authoritiesString));
+        return ResponseEntity.ok(new JwtAuthenticationResponse(token, authoritiesString,
+                userService.find(authenticationRequest.getUsername()).getId()));
     }
 
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
@@ -197,7 +202,7 @@ public class AccountController {
         }
     }
 
-    @GetMapping ("/logout")
+    @RequestMapping ("/logout")
     public ResponseEntity<?> logout(){
         SecurityContextHolder.clearContext();
         return new ResponseEntity<>(HttpStatus.OK);

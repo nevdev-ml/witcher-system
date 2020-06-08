@@ -1,45 +1,15 @@
-<div *ngIf="isDataAvailable">
-  <nav  class="navbar navbar-inverse">
-    <div class="container-fluid">
-
-      <ul class="nav navbar-nav">
-        <li class="active"  ><a>Home</a></li>
-
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-
-        <li><a href="#"><span (click)="logout()"></span>Выйти</a></li>
-      </ul>
-    </div>
-  </nav>
-
-  <div class="container">
-
-    <!-- Jumbotron Header -->
-    <header class="jumbotron my-4">
-      <button (click)="logout()">Logout</button>
-      <h1 class="display-3">  <strong>{{currentUser.username}}</strong>, Добро пожаловать</h1>
-      <p class="lead">Получайте выгоду с нашей системой
-      </p>
-      <p>
-        {{currentUser.email}}
-      </p>
-      <p>
-        {{currentUser.firstName}}
-      </p>
-      <p>
-        {{currentUser.lastName}}
-      </p>
-      <p>
-        {{currentUser.checkedRole}}
-      </p>
-      <div class="row">
-
-
-
-
-      </div>
-    </header>
-
+<div class="profile-block">
+  <h1>Добро пожаловать, <strong>{{currentUser.firstName}} {{currentUser.lastName}}</strong></h1>
+  <p>
+    Получайте выгоду с нашей системой!
+  </p>
+  <p> <span class="title">Электронная почта:</span> {{currentUser.email}}</p>
+  <p> <span class="title">Логин:</span> {{currentUser.username}}</p>
+  <p> <span class="title">Роль:</span> {{role}}</p>
+  <div *ngIf="role == 'WITCHER'">
+    <p>
+      <span class="title">Принятые задания:</span>
+    </p>
+    <app-tasks></app-tasks>
   </div>
 </div>

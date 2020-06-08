@@ -1,8 +1,8 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
-import {AppComponent} from '../../app.component';
 import {UserView} from '../../models/user.view';
+import {Constants} from '../../utils/constants';
 
 @Component({
   selector: 'app-profile',
@@ -12,6 +12,7 @@ import {UserView} from '../../models/user.view';
 })
 export class ProfileComponent implements OnInit {
   currentUser: UserView;
+  role = localStorage.getItem(Constants.ROLES);
   isDataAvailable = false;
 
   constructor(public authService: AuthService, public router: Router) { }
@@ -21,10 +22,10 @@ export class ProfileComponent implements OnInit {
   }
 
   getUser(){
-    if (localStorage.getItem(AppComponent.TOKEN) == null) {
-      this.router.navigate(['/login']).then(() => console.log(AppComponent.NOT_AUTH));
+    if (localStorage.getItem(Constants.TOKEN) == null) {
+      this.router.navigate(['/login']).then(() => console.log(Constants.NOT_AUTH));
     } else{
-      this.authService.profile({Authorization : localStorage.getItem(AppComponent.TOKEN)}).subscribe(
+      this.authService.profile({Authorization : localStorage.getItem(Constants.TOKEN)}).subscribe(
         data => {
           console.log(data);
           this.currentUser = data;
@@ -36,16 +37,5 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  logout() {
-    this.authService.logout()
-      .subscribe(
-        () => {
-          localStorage.removeItem(AppComponent.TOKEN);
-          localStorage.removeItem(AppComponent.ROLES);
-          this.router.navigate(['/login']).then(() => console.log('Success logout'));
-        },
-        error => {
-          console.log(error);
-        });
-  }
+
 }

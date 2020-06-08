@@ -1,82 +1,90 @@
-<div class="container">
-  <div class="card card-container">
-    <p id="profile-name" class="profile-name-card"></p>
+<div class="block-wrapper" fxLayout="row" fxLayoutAlign="center center">
+  <mat-card class="box">
+    <mat-card-header>
+      <mat-card-title>Регистрация</mat-card-title>
+    </mat-card-header>
 
-    <form name="form" (ngSubmit)="f.form.valid && register()" #f="ngForm" novalidate>
-      <div class="alert alert-danger" role="alert" *ngIf="errorMessage">{{errorMessage}}</div>
-      <span id="reauth-email" class="reauth-email"></span>
+    <form class="example-form" name="form" [formGroup]="form" (ngSubmit)="register()" novalidate>
+      <mat-error *ngIf="errorMessage">{{errorMessage}}</mat-error>
 
-      <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
-        <label for="name">Имя</label>
-        <input type="text" class="form-control" name="name" id="name" [(ngModel)]="user.firstName" #name="ngModel" required />
-        <div *ngIf="f.submitted && !name.valid" class="help-block">
-          Имя является обязательным полем
-        </div>
-      </div>
+      <mat-card-content>
 
-      <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !surname.valid }">
-        <label for="surname">Фамилия</label>
-        <input type="text" class="form-control" name="surname" id="surname" [(ngModel)]="user.lastName"
-               #surname="ngModel" required />
-        <div *ngIf="f.submitted && !surname.valid" class="help-block">
-          Фамилия является обязательным полем
-        </div>
-      </div>
+        <!-- First Name -->
+        <mat-form-field class="example-full-width">
+          <mat-label>Введите имя</mat-label>
+          <input matInput placeholder="Имя" formControlName="firstName" [(ngModel)]="user.firstName" required>
+          <mat-error *ngIf="form.controls['firstName'].invalid && form.controls['firstName'].touched">
+            Имя является обязательным полем
+          </mat-error>
+        </mat-form-field>
 
-      <div class="form-group">
-        <label for="email">Электронная почта</label>
-        <input type="email" class="form-control" name="email" id="email" [(ngModel)]="user.email" />
-      </div>
+        <!-- Last Name -->
+        <mat-form-field class="example-full-width">
+          <mat-label>Введите фамилию</mat-label>
+          <input matInput placeholder="Фамилия" formControlName="lastName" [(ngModel)]="user.lastName" required>
+          <mat-error *ngIf="form.controls['lastName'].invalid && form.controls['lastName'].touched">
+            Фамилия является обязательным полем
+          </mat-error>
+        </mat-form-field>
 
-
-      <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
-        <label for="username">Логин</label>
-        <input type="text" class="form-control" name="username" id="username" [(ngModel)]="user.username"
-               #username="ngModel" required />
-        <div *ngIf="f.submitted && !username.valid" class="help-block">
-          <div *ngIf="username.errors.required">
+        <!-- Username -->
+        <mat-form-field class="example-full-width">
+          <mat-label>Введите логин</mat-label>
+          <input matInput placeholder="Логин" formControlName="username" [(ngModel)]="user.username" required>
+          <mat-error *ngIf="form.controls['username'].invalid && form.controls['username'].touched">
             Логин является обязательным полем
-          </div>
-        </div>
-      </div>
+          </mat-error>
+        </mat-form-field>
 
-      <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
-        <label for="password">Пароль</label>
-        <input type="password" class="form-control" name="password" id="password" [(ngModel)]="user.password"
-               #password="ngModel" required minlength="6" />
-        <div *ngIf="f.submitted && !password.valid" class="help-block">
+        <!-- Email -->
+        <mat-form-field class="example-full-width">
+          <mat-label>Введите электронную почту</mat-label>
+          <input matInput placeholder="example@example.com" formControlName="email" [(ngModel)]="user.email" required>
+          <mat-error *ngIf="form.controls['email'].hasError('email')">
+            Электронная почта неверного формата
+          </mat-error>
+          <mat-error *ngIf="form.controls['email'].hasError('required')">
+            Электронная почта является обязательным полем
+          </mat-error>
+        </mat-form-field>
 
-          <div *ngIf="password.errors.required">
+        <!-- Password -->
+        <mat-form-field class="example-full-width">
+          <mat-label>Введите пароль</mat-label>
+          <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" [(ngModel)]="user.password" required>
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="form.controls['password'].hasError('minLength')">
+            Пароль должен содержать хотя бы 6 символов
+          </mat-error>
+          <mat-error *ngIf="form.controls['password'].hasError('required')">
             Пароль является обязательным полем
-          </div>
-          <div *ngIf="password.errors.minlength">
-            Пароль должен содержать как минимум 6 символов
-          </div>
+          </mat-error>
+        </mat-form-field>
 
-        </div>
+        <!-- Confirm Password -->
+        <mat-form-field class="example-full-width">
+          <mat-label>Повторите пароль</mat-label>
+          <input matInput formControlName="confirmPassword" [type]="hide ? 'password' : 'text'" required>
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="form.controls['confirmPassword'].hasError('passwordError')">
+            Пароли не совпадают
+          </mat-error>
+          <mat-error *ngIf="form.controls['password'].hasError('required')">
+            Необходимо повторить пароль
+          </mat-error>
+        </mat-form-field>
 
+        <!-- Role -->
         <app-select-dropdown [objectList]="roles" [title]="title" (changed)="onChangedRole($event)"></app-select-dropdown>
+      </mat-card-content>
 
+      <button mat-stroked-button color="accent" class="btn-block" type="submit">Создать аккаунт</button>
+      <button mat-stroked-button class="btn-block" [routerLink]="['/']">Вернуться</button>
 
-
-
-      </div>
-      <div id="remember" class="checkbox">
-
-      </div>
-      <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">
-        Создать аккаунт
-      </button>
-      <button [routerLink]="['/login']" class="btn btn-lg btn-danger btn-block btn-cancel" type="button">
-        Вернуться
-      </button>
-
-    </form><!-- /form -->
-
-  </div><!-- /card-container -->
-</div><!-- /container -->
-
-
-
-
-
+    </form>
+  </mat-card>
+</div>
