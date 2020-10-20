@@ -52,6 +52,14 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
+    if (this.form.invalid) {
+      return;
+    }
+    this.user.firstName = this.form.get('firstName').value;
+    this.user.lastName = this.form.get('lastName').value;
+    this.user.username = this.form.get('username').value;
+    this.user.email = this.form.get('email').value;
+    this.user.password = this.form.get('password').value;
     console.log(this.user);
     console.log(this.checkedValue);
     this.user.checkedRole = this.checkedValue;

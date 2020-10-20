@@ -17,8 +17,8 @@
     </div>
     <span class="spacer"></span>
     <span class="nav-tool-items" fxShow="true" fxHide.lt-md="true">
-      <a mat-button routerLink="tasks" routerLinkActive="active">Заказы</a>
-      <a mat-button routerLink="profile" routerLinkActive="active">Профиль</a>
+      <a *ngIf="isAuth()" mat-button routerLink="tasks" routerLinkActive="active">Заказы</a>
+      <a *ngIf="isAuth()" mat-button routerLink="profile" routerLinkActive="active">Профиль</a>
       <a *ngIf="!isAuth()" mat-button routerLink="login" routerLinkActive="active">Войти</a>
       <a *ngIf="!isAuth()" mat-button mat-raised-button routerLink="register" routerLinkActive="active">Зарегистрироваться</a>
       <a *ngIf="isAuth()" mat-button mat-raised-button (click)="logout()" routerLinkActive="active">Выйти</a>
@@ -29,8 +29,8 @@
 <mat-sidenav-container fxFlexFill class="app-header">
   <mat-sidenav #menu>
     <mat-nav-list>
-      <a mat-list-item routerLink="tasks" routerLinkActive="active">Заказы</a>
-      <a mat-list-item routerLink="profile" routerLinkActive="active">Профиль</a>
+      <a *ngIf="isAuth()" mat-list-item routerLink="tasks" routerLinkActive="active">Заказы</a>
+      <a *ngIf="isAuth()" mat-list-item routerLink="profile" routerLinkActive="active">Профиль</a>
 
       <a *ngIf="!isAuth()" mat-list-item routerLink="login" routerLinkActive="active">Войти</a>
       <a *ngIf="!isAuth()" mat-list-item routerLink="register" routerLinkActive="active">Зарегистрироваться</a>

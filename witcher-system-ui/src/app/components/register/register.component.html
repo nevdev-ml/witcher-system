@@ -12,7 +12,7 @@
         <!-- First Name -->
         <mat-form-field class="example-full-width">
           <mat-label>Введите имя</mat-label>
-          <input matInput placeholder="Имя" formControlName="firstName" [(ngModel)]="user.firstName" required>
+          <input matInput placeholder="Имя" formControlName="firstName" required>
           <mat-error *ngIf="form.controls['firstName'].invalid && form.controls['firstName'].touched">
             Имя является обязательным полем
           </mat-error>
@@ -21,7 +21,7 @@
         <!-- Last Name -->
         <mat-form-field class="example-full-width">
           <mat-label>Введите фамилию</mat-label>
-          <input matInput placeholder="Фамилия" formControlName="lastName" [(ngModel)]="user.lastName" required>
+          <input matInput placeholder="Фамилия" formControlName="lastName" required>
           <mat-error *ngIf="form.controls['lastName'].invalid && form.controls['lastName'].touched">
             Фамилия является обязательным полем
           </mat-error>
@@ -30,7 +30,7 @@
         <!-- Username -->
         <mat-form-field class="example-full-width">
           <mat-label>Введите логин</mat-label>
-          <input matInput placeholder="Логин" formControlName="username" [(ngModel)]="user.username" required>
+          <input matInput placeholder="Логин" formControlName="username" required>
           <mat-error *ngIf="form.controls['username'].invalid && form.controls['username'].touched">
             Логин является обязательным полем
           </mat-error>
@@ -39,7 +39,7 @@
         <!-- Email -->
         <mat-form-field class="example-full-width">
           <mat-label>Введите электронную почту</mat-label>
-          <input matInput placeholder="example@example.com" formControlName="email" [(ngModel)]="user.email" required>
+          <input matInput placeholder="example@example.com" formControlName="email" required>
           <mat-error *ngIf="form.controls['email'].hasError('email')">
             Электронная почта неверного формата
           </mat-error>
@@ -51,8 +51,8 @@
         <!-- Password -->
         <mat-form-field class="example-full-width">
           <mat-label>Введите пароль</mat-label>
-          <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" [(ngModel)]="user.password" required>
-          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+          <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" required>
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide" type='button'>
             <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
           <mat-error *ngIf="form.controls['password'].hasError('minLength')">
@@ -67,7 +67,7 @@
         <mat-form-field class="example-full-width">
           <mat-label>Повторите пароль</mat-label>
           <input matInput formControlName="confirmPassword" [type]="hide ? 'password' : 'text'" required>
-          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide" type='button'>
             <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
           <mat-error *ngIf="form.controls['confirmPassword'].hasError('passwordError')">

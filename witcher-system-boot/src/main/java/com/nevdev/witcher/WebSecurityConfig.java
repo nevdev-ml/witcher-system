@@ -95,6 +95,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/task/add").hasAnyAuthority("USER", "KING")
                 .antMatchers("/task/accept/**", "/task/cancel/**", "/task/quests").hasAuthority("WITCHER")
                 .antMatchers("/task/tasks").permitAll() //TODO
+                .antMatchers("/account/forgot/**").permitAll()
+                .antMatchers("/account/reset/**").permitAll()
                 .anyRequest().hasAnyAuthority("USER", "KING", "BLACKSMITH", "VENDOR", "WITCHER")
                 // Enable h2 console
                 .and().headers().frameOptions().disable();

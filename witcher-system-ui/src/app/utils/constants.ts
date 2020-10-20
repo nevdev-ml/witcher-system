@@ -8,6 +8,8 @@ export class Constants {
   static PATH_LOGOUT = Constants.API_URL + '/account/logout';
   static PATH_REGISTER = Constants.API_URL + '/account/register';
   static PATH_PROFILE = Constants.API_URL + '/account/profile';
+  static PATH_FORGOT_PASSWORD = Constants.API_URL + '/account/forgot/';
+  static PATH_RESET_PASSWORD = Constants.API_URL + '/account/reset/';
 
   static PATH_TASK = Constants.API_URL + '/task/details/';
   static PATH_TASKS = Constants.API_URL + '/task/tasks/';

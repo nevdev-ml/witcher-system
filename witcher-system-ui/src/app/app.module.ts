@@ -36,6 +36,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import { HomeComponent } from './components/home/home.component';
+import { ForgotComponent } from './components/forgot/forgot.component';
+import { ResetComponent } from './components/reset/reset.component';
 registerLocaleData(localeRu);
 
 @NgModule({
@@ -48,7 +50,9 @@ registerLocaleData(localeRu);
     TasksComponent,
     SelectDropdownComponent,
     TaskCreateComponent,
-    HomeComponent
+    HomeComponent,
+    ForgotComponent,
+    ResetComponent
   ],
   imports: [
     BrowserModule,

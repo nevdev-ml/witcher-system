@@ -31,6 +31,8 @@ public class User {
     @Size(min = 6, max = 50)
     private String password;
 
+    private String resetToken;
+
     @Enumerated(EnumType.ORDINAL)
     private Role role;
 

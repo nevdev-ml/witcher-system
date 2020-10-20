@@ -35,5 +35,17 @@ export class AuthService implements HttpInterceptor {
   profile(p: { Authorization: string }){
     return this.http.get<User>(Constants.PATH_PROFILE, {headers: p});
   }
+
+  forgot(email: string) {
+    return this.http.get(Constants.PATH_FORGOT_PASSWORD + email);
+  }
+
+  getResetPage(token: string) {
+    return this.http.get(Constants.PATH_RESET_PASSWORD + token);
+  }
+
+  reset(password: string, token: string) {
+    return this.http.post<User>(Constants.PATH_RESET_PASSWORD + token, password);
+  }
 }
 

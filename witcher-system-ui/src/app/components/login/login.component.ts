@@ -31,12 +31,26 @@ export class LoginComponent implements OnInit {
   }
 
   login(){
+    if (this.form.invalid) {
+      return;
+    }
+    this.user.username = this.form.get('username').value;
+    this.user.password = this.form.get('password').value;
     this.authService.login(this.user)
       .subscribe(response => {
-        localStorage.setItem(Constants.TOKEN, response.token);
-        localStorage.setItem(Constants.ROLES, response.authorities);
-        localStorage.setItem(Constants.ID, response.id);
-        this.router.navigate(['/profile']).then(() => console.log('Success login'));
+        if (response.id === undefined) {
+          this.errorMessage = 'Неверный логин или пароль';
+        }
+        else{
+          localStorage.setItem(Constants.TOKEN, response.token);
+          localStorage.setItem(Constants.ROLES, response.authorities);
+          localStorage.setItem(Constants.ID, response.id);
+          this.router.navigate(['/profile']).then(() => console.log('Success login'));
+        }
+        // localStorage.setItem(Constants.TOKEN, response.token);
+        // localStorage.setItem(Constants.ROLES, response.authorities);
+        // localStorage.setItem(Constants.ID, response.id);
+        // this.router.navigate(['/profile']).then(() => console.log('Success login'));
       }, error => {
         console.log(error);
         this.errorMessage = 'Неверный логин или пароль';

@@ -9,4 +9,8 @@ public interface IUserService extends IService<User> {
     User findByUsernameAndPassword(String username, String password);
 
     User findByUsernameOrEmail(String username, String email);
+
+    User findUserByEmail(String email);
+
+    User findUserByResetToken(String resetToken);
 }

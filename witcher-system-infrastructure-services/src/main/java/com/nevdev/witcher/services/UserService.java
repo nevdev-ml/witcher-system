@@ -57,4 +57,14 @@ public class UserService implements IUserService {
     public Iterable<User> getAll() {
         return userRepository.findAll();
     }
+
+    @Override
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public User findUserByResetToken(String resetToken) {
+        return userRepository.findByResetToken(resetToken);
+    }
 }

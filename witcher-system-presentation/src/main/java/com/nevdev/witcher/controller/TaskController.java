@@ -63,7 +63,7 @@ public class TaskController {
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/quests") //TODO: IF ROLE IS WITCHER
+    @RequestMapping(value = "/quests")
     public ResponseEntity<?> quests(@RequestHeader("Authorization") String token){
         String username = jwtTokenUtil.getUsernameFromToken(token);
         User user = userService.find(username);
@@ -211,7 +211,7 @@ public class TaskController {
         Task task = taskService.get(id);
         if(user != null && task != null){
             task.getWitchers().add(user);
-            taskService.edit(task);
+            task = taskService.edit(task);
             logger.info("Accept task");
             return ResponseEntity.ok(task);
         }
@@ -226,7 +226,7 @@ public class TaskController {
         Task task = taskService.get(id);
         if(user != null && task != null){
             task.getWitchers().remove(user);
-            taskService.edit(task);
+            task = taskService.edit(task);
             logger.info("Cancel task");
             return ResponseEntity.ok(task);
         }

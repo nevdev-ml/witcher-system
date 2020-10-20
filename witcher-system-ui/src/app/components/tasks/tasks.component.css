@@ -5,3 +5,7 @@ table {
 .add {
   float: right;
 }
+
+.add-block {
+  background: white;
+}

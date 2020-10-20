@@ -12,7 +12,7 @@
         <!-- Username -->
         <mat-form-field class="example-full-width">
           <mat-label>Введите логин</mat-label>
-          <input matInput placeholder="Логин" formControlName="username" [(ngModel)]="user.username" required>
+          <input matInput placeholder="Логин" formControlName="username" required>
           <mat-error *ngIf="form.controls['username'].invalid && form.controls['username'].touched">
             Логин является обязательным полем
           </mat-error>
@@ -21,8 +21,8 @@
         <!-- Password -->
         <mat-form-field class="example-full-width">
           <mat-label>Введите пароль</mat-label>
-          <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" [(ngModel)]="user.password" required>
-          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+          <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" required>
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide" type="button">
             <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
           <mat-error *ngIf="form.controls['password'].hasError('required')">

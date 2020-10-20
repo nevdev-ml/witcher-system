@@ -11,7 +11,7 @@ import {Constants} from '../../utils/constants';
   encapsulation: ViewEncapsulation.None
 })
 export class ProfileComponent implements OnInit {
-  currentUser: UserView;
+  currentUser: UserView = new UserView();
   role = localStorage.getItem(Constants.ROLES);
   isDataAvailable = false;
 
