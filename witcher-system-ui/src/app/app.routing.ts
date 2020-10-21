@@ -21,6 +21,8 @@ const appRoutes: Routes = [
   { path: 'tasks/:task', component: TaskComponent, canActivate: [UrlPermission] },
   { path: 'tasks', component: TasksComponent, canActivate: [UrlPermission] },
   { path: 'quests', component: TasksComponent, canActivate: [UrlPermission] },
+  { path: 'profile/completed', component: TasksComponent, canActivate: [UrlPermission] }, // TODO
+  { path: 'profile/history', component: TasksComponent, canActivate: [UrlPermission] }, // TODO
   { path: 'add', component: TaskCreateComponent, canActivate: [UrlPermission] },
 
   { path: '', pathMatch: 'full', component: HomeComponent },

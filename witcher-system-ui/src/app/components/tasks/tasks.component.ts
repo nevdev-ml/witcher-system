@@ -5,9 +5,10 @@ import {TaskViewModel} from '../../models/task/task.view.model';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
-import { faExternalLinkAlt, faCheckSquare, faEdit, faPlusCircle, faMinusSquare } from '@fortawesome/free-solid-svg-icons';
+import { faExternalLinkAlt, faCheckSquare, faEdit, faPlusCircle, faMinusSquare, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import {TaskUserModel} from '../../models/task/task.user.model';
 import {Constants} from '../../utils/constants';
+import {TasksViewModel} from '../../models/task/tasks.view.model';
 
 @Component({
   selector: 'app-tasks',
@@ -17,17 +18,22 @@ import {Constants} from '../../utils/constants';
 export class TasksComponent implements OnInit {
 
   constructor(private taskService: TaskService, private router: Router, private route: ActivatedRoute) {}
-  tasks: TaskViewModel[];
+  tasks: TasksViewModel;
+  activeTasks: TaskViewModel[];
+  winTasks: TaskViewModel[];
+  loseTasks: TaskViewModel[];
+
   role = localStorage.getItem(Constants.ROLES);
   id = localStorage.getItem(Constants.ID);
   isDataAvailable = false;
   displayedColumns: string[] = ['id', 'createOn', 'location.region', 'beast', 'reward.reward', 'customer', 'action'];
-  dataSource = new MatTableDataSource<TaskViewModel>(this.tasks);
+  dataSource = new MatTableDataSource<TaskViewModel>(this.activeTasks);
   faOpen = faExternalLinkAlt;
   faAccept = faCheckSquare;
   faCancel = faMinusSquare;
   faEdit = faEdit;
   faAdd = faPlusCircle;
+  faTrashAlt = faTrashAlt;
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -49,13 +55,11 @@ export class TasksComponent implements OnInit {
     this.paginator._intl.nextPageLabel = 'Следующая страница';
     this.paginator._intl.previousPageLabel = 'Предыдущая страница';
     this.paginator._intl.lastPageLabel = 'Последняя страница';
-    if (this.router.url === '/quests'){
-      this.getQuests();
-    } else if (this.router.url === '/profile'){
-      this.getQuests();
+    if (this.router.url === '/tasks'){
+      this.getTasks();
     }
     else{
-      this.getTasks();
+      this.getQuests();
     }
   }
 
@@ -65,7 +69,8 @@ export class TasksComponent implements OnInit {
     } else{
       this.taskService.tasks({Authorization : localStorage.getItem(Constants.TOKEN)}).subscribe(
         data => {
-          this.init(data);
+          this.init(data, false);
+          this.getTypeQuests(this.activeTasks);
         },
         error => {
           console.log(error);
@@ -79,7 +84,8 @@ export class TasksComponent implements OnInit {
     } else{
       this.taskService.quests({Authorization : localStorage.getItem(Constants.TOKEN)}).subscribe(
         data => {
-          this.init(data);
+          this.init(data, true);
+          this.chooseTypeQuests();
         },
         error => {
           console.log(error);
@@ -87,17 +93,49 @@ export class TasksComponent implements OnInit {
     }
   }
 
-  init(data) {
-    console.log(data);
-    data.forEach((item) => {
-      this.taskService.mapTask(item);
-    });
-    this.tasks = data;
-    this.dataSource = new MatTableDataSource(this.tasks);
+  private chooseTypeQuests() {
+    if (this.router.url === '/quests'){
+      this.getTypeQuests(this.activeTasks);
+    } else if (this.router.url === '/profile'){
+      this.getTypeQuests(this.activeTasks);
+    } else if (this.router.url === '/profile/completed'){
+      this.getTypeQuests(this.winTasks);
+    } else if (this.router.url === '/profile/history'){
+      this.getTypeQuests(this.loseTasks);
+    }
+  }
+
+  init(data, isProfile) {
+    if (isProfile){
+      this.tasks = data;
+      this.tasks.active.forEach((item) => {
+        this.taskService.mapTask(item);
+      });
+      this.activeTasks = this.tasks.active;
+
+      this.tasks.win.forEach((item) => {
+        this.taskService.mapTask(item);
+      });
+      this.winTasks = this.tasks.win;
+      this.tasks.lose.forEach((item) => {
+        this.taskService.mapTask(item);
+      });
+      this.loseTasks = this.tasks.lose;
+    }
+    else{
+      data.forEach((item) => {
+        this.taskService.mapTask(item);
+      });
+      this.activeTasks = data;
+    }
+  }
+
+  private getTypeQuests(tasks) {
+    this.dataSource = new MatTableDataSource(tasks);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor = TasksComponent.sortingDataAccessor;
     this.dataSource.sort = this.sort;
-    this.isDataAvailable = this.tasks.length !== 0;
+    this.isDataAvailable = this.activeTasks.length !== 0;
   }
 
   accept(task): void {
@@ -140,6 +178,10 @@ export class TasksComponent implements OnInit {
 
   edit(task): void {
     this.taskService.edit(task);
+  }
+
+  delete(task): void {
+    this.taskService.delete(task);
   }
 
   add(): void {

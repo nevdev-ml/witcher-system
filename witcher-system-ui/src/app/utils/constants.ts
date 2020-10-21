@@ -17,6 +17,9 @@ export class Constants {
   static PATH_ADD_TASK = Constants.API_URL + '/task/add/';
   static PATH_ACCEPT_TASK = Constants.API_URL + '/task/accept/';
   static PATH_CANCEL_TASK = Constants.API_URL + '/task/cancel/';
+  static PATH_COMPLETE_TASK = Constants.API_URL + '/task/complete/';
+  static PATH_REWARD_TASK = Constants.API_URL + '/task/reward/';
+  static PATH_REFUSE_TASK = Constants.API_URL + '/task/refuse/';
   // constants
   static TOKEN = 'token';
   static JWT_HEADER = 'Authorization';
@@ -36,8 +39,7 @@ export class Constants {
   static RegionMap = new Map<number, string>([
     [RegionsEnum.AEDIRN, 'Аэдирн'], [RegionsEnum.BROKILON, 'Брокилон'], [RegionsEnum.CIDARIS, 'Цидарис'], [RegionsEnum.CINTRA, 'Цинтра'],
     [RegionsEnum.HENGFORS, 'Хенгфорс'], [RegionsEnum.KAEDWEN, 'Каэдвен'], [RegionsEnum.KOVIR, 'Ковир'], [RegionsEnum.LYRIA, 'Лирия'],
-    [RegionsEnum.REDANIA, 'Редания'], [RegionsEnum.SKELLIGE, 'Скеллиге'], [RegionsEnum.TEMERIA, 'Темерия'], [RegionsEnum.VERDEN, 'Верден'],
-    [RegionsEnum.AEDIRN, 'Аэдирн']
+    [RegionsEnum.REDANIA, 'Редания'], [RegionsEnum.SKELLIGE, 'Скеллиге'], [RegionsEnum.TEMERIA, 'Темерия'], [RegionsEnum.VERDEN, 'Верден']
   ]);
   static CurrencyMap = new Map<number, string>([
     [CurrencyEnum.CROWN, 'Крона'], [CurrencyEnum.OREN, 'Орен'], [CurrencyEnum.DUCAT, 'Дукат']

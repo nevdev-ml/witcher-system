@@ -90,13 +90,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/account/register","/account/login", "/account/logout").permitAll()
-                .antMatchers("/task/details/**").permitAll()//.hasAuthority("USER")
+                .antMatchers("/account/register","/account/login", "/account/logout", "/account/forgot/**", "/account/reset/**").permitAll()
+                .antMatchers("/task/details/**", "/task/tasks").authenticated()//.permitAll()//.hasAuthority("USER")
                 .antMatchers("/task/add").hasAnyAuthority("USER", "KING")
                 .antMatchers("/task/accept/**", "/task/cancel/**", "/task/quests").hasAuthority("WITCHER")
-                .antMatchers("/task/tasks").permitAll() //TODO
-                .antMatchers("/account/forgot/**").permitAll()
-                .antMatchers("/account/reset/**").permitAll()
+//                .antMatchers().permitAll()
                 .anyRequest().hasAnyAuthority("USER", "KING", "BLACKSMITH", "VENDOR", "WITCHER")
                 // Enable h2 console
                 .and().headers().frameOptions().disable();

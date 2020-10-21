@@ -37,11 +37,24 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public List<Task> getAllQuests(Long userId) {
-        return StreamSupport.stream(getAll().spliterator(), false)
-                .collect(Collectors.toList()).stream().filter(item ->
-                        item.getWitchers().stream().anyMatch(u ->
-                                u.getId().equals(userId))).collect(Collectors.toList());
+    public List<Task> getActiveQuests(Long userId) {
+        return new ArrayList<>(find(false)).stream()
+                .filter(item -> item.getWitchers().stream()
+                        .anyMatch(u -> u.getId().equals(userId)))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Task> getWinHistoryQuests(Long userId) {
+        return taskRepository.findByWitcherIdAndDone(userId, true);
+    }
+
+    @Override
+    public List<Task> getLoseHistoryQuests(Long userId) {
+        return new ArrayList<>(find(true)).stream()
+                .filter(item -> item.getWitchers().stream()
+                        .anyMatch(u -> u.getId().equals(userId)) && !item.getWitcherId().equals(userId))
+                .collect(Collectors.toList());
     }
 
     @Override

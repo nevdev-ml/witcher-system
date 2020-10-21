@@ -6,6 +6,7 @@ import com.nevdev.witcher.enums.Currency;
 import com.nevdev.witcher.enums.Region;
 import com.nevdev.witcher.enums.Role;
 import com.nevdev.witcher.models.TaskCreateViewModel;
+import com.nevdev.witcher.models.TaskListViewModel;
 import com.nevdev.witcher.models.TaskViewModel;
 import com.nevdev.witcher.services.TaskService;
 import com.nevdev.witcher.services.UserService;
@@ -15,16 +16,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @RestController
@@ -68,11 +65,24 @@ public class TaskController {
         String username = jwtTokenUtil.getUsernameFromToken(token);
         User user = userService.find(username);
         if(user != null){
-            List<TaskViewModel> tasks = new ArrayList<>();
-            taskService.getAllQuests(user.getId()).forEach((item) -> tasks.add(new TaskViewModel(item,
+            List<TaskViewModel> activeTasks = new ArrayList<>();
+            taskService.getActiveQuests(user.getId()).forEach((item) -> activeTasks.add(new TaskViewModel(item,
                     userService.get(item.getCustomerId()),
                     userService.get(item.getWitcherId()))
             ));
+            List<TaskViewModel> winTasks = new ArrayList<>();
+            taskService.getWinHistoryQuests(user.getId()).forEach((item) -> winTasks.add(new TaskViewModel(item,
+                    userService.get(item.getCustomerId()),
+                    userService.get(item.getWitcherId()))
+            ));
+            List<TaskViewModel> loseTasks = new ArrayList<>();
+            taskService.getLoseHistoryQuests(user.getId()).forEach((item) -> loseTasks.add(new TaskViewModel(item,
+                    userService.get(item.getCustomerId()),
+                    userService.get(item.getWitcherId()))
+            ));
+
+            TaskListViewModel tasks = new TaskListViewModel(activeTasks, winTasks, loseTasks);
+
             logger.info("Get all witcher tasks");
             return ResponseEntity.ok(tasks);
         }
@@ -182,7 +192,6 @@ public class TaskController {
                     .path("/details/{id}")
                     .buildAndExpand(created.getId())
                     .toUri();
-            ResponseEntity<?> t = ResponseEntity.created(uri).body(created);
             logger.info(String.format("Created task on %s", uri));
             return ResponseEntity.created(uri).body(created);
         }
@@ -233,39 +242,95 @@ public class TaskController {
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
-    private void buildMock(){ //TODO: Mock data
-        String title = "Нужно убить этих чертовых эльфов!";
-        String locationComment = "Водятся в лесах Брокилона!";
-        Location location = new Location(Region.BROKILON);
-        Reward reward = new Reward(1000d, Currency.CROWN);
-        Beast beast = new Beast(Bestiary.BRUXA);
-
-        Authority USER = new Authority();
-        USER.setRoleName(Role.USER);
-        List<Authority> authoritiesList = new ArrayList<>();
-        authoritiesList.add(USER);
-        User user = new User("login", BCrypt.hashpw("password", BCrypt.gensalt()), Role.USER,
-                "Фольтест", "Темерский", "foltest@gmail.com", true,
-                new Date(System.currentTimeMillis()), authoritiesList);
-
-        Authority WITCHER = new Authority();
-        WITCHER.setRoleName(Role.WITCHER);
-        List<Authority> authoritiesList1 = new ArrayList<>();
-        authoritiesList1.add(WITCHER);
-        User user1 = new User("witcher", BCrypt.hashpw("password", BCrypt.gensalt()), Role.WITCHER,
-                "Геральт", "Ривийский", "witcher@gmail.com", true,
-                new Date(System.currentTimeMillis()), authoritiesList1);
-
-        Long customerId = userService.create(user).getId();
-
-        //WITCHER TEST
-        User witcher = userService.create(user1);
-
-        // TODO WHEN DONE SET DONE(TRUE), COMPLETION DATE, WITCHER(USER)
-
-        Task task = new Task(title, locationComment, location, reward, customerId,
-                new ArrayList<>(Collections.singletonList(beast)));
-        task.setWitchers(new ArrayList<>(Collections.singletonList(witcher)));
-        taskService.create(task);
+    @RequestMapping(value = "/complete/{id}")
+    public ResponseEntity<?> complete(HttpServletRequest request,  @PathVariable long id){
+        String token = request.getHeader(tokenHeader);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        User user = userService.find(username);
+        Task task = taskService.get(id);
+        if(user != null && task != null){
+            task.getWitchersCompleted().add(user);
+            task = taskService.edit(task);
+            logger.info("Complete task");
+            return ResponseEntity.ok(task);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
+
+    @RequestMapping(value = "/reward/{id}")
+    public ResponseEntity<?> reward(HttpServletRequest request, @RequestBody long userID, @PathVariable long id){
+        String token = request.getHeader(tokenHeader);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        User user = userService.find(username);
+        Task task = taskService.get(id);
+        User witcher = userService.get(userID);
+        if(user != null && task != null && witcher != null){
+            task.setDone(true);
+            task.setWitcherId(witcher.getId());
+            task.setCompletionOn(new Date(System.currentTimeMillis()));
+            task.setWitchersCompleted(null);
+            task = taskService.edit(task);
+            logger.info("Reward task");
+            return ResponseEntity.ok(task);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/refuse/{id}")
+    public ResponseEntity<?> refuse(HttpServletRequest request, @RequestBody long userID, @PathVariable long id){
+        String token = request.getHeader(tokenHeader);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        User user = userService.find(username);
+        Task task = taskService.get(id);
+        User witcher = userService.get(userID);
+        if(user != null && task != null && witcher != null){
+            task.getWitchersCompleted().remove(witcher);
+            task = taskService.edit(task);
+            logger.info("Refuse task");
+            return ResponseEntity.ok(task);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/delete/{id}")
+    public ResponseEntity<?> delete(HttpServletRequest request,  @PathVariable long id){
+        String token = request.getHeader(tokenHeader);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        User user = userService.find(username);
+        Task task = taskService.get(id);
+        if(user != null && task != null){
+            if(user.getRole() == Role.KING || user.getId().equals(task.getCustomerId())){
+                taskService.delete(task);
+                logger.info("Delete task");
+                return ResponseEntity.ok(task);
+            }
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/edit/{id}")
+    public ResponseEntity<?> edit(HttpServletRequest request, @RequestBody Task task, @PathVariable long id){
+        String token = request.getHeader(tokenHeader);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        User user = userService.find(username);
+        Task oldTask = taskService.get(id);
+        if(user != null && task != null){
+            if(user.getRole() == Role.KING || user.getId().equals(task.getCustomerId())){
+                oldTask.setPaid(task.getPaid());
+                oldTask.setTitle(task.getTitle());
+                oldTask.setLocationComment(task.getLocationComment());
+                oldTask.setLocation(task.getLocation());
+                oldTask.setReward(task.getReward());
+                oldTask.setBeasts(task.getBeasts());
+                oldTask.setDone(task.getDone());
+
+                taskService.edit(oldTask);
+                logger.info("Delete task");
+                return ResponseEntity.ok(task);
+            }
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+
+
 }

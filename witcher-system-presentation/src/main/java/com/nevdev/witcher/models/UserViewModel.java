@@ -16,12 +16,14 @@ public class UserViewModel extends User {
 
     public UserViewModel(String username, String password, Role role, String firstName, String lastName, String email,
                          String checkedRole, Boolean enabled, Date lastPasswordResetDate, List<Authority> authorities) {
-        super(username, password, role, firstName, lastName, email, enabled, lastPasswordResetDate, authorities);
+        super(username, password, role, firstName, lastName, email, enabled, lastPasswordResetDate, authorities,
+                role == Role.KING);
         this.checkedRole = checkedRole;
     }
 
     public User getUser(){
+        Boolean kingRepository = this.getRole() == Role.KING;
         return new User(this.getUsername(), this.getPassword(), this.getRole(), this.getFirstName(), this.getLastName(),
-                this.getEmail(), this.getEnabled(), this.getLastPasswordResetDate(), this.getAuthorities());
+                this.getEmail(), this.getEnabled(), this.getLastPasswordResetDate(), this.getAuthorities(), kingRepository);
     }
 }

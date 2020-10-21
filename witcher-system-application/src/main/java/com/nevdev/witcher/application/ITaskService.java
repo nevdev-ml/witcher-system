@@ -10,5 +10,9 @@ public interface ITaskService extends IService<Task> {
 
     List<Task> find(Boolean done);
 
-    List<Task> getAllQuests(Long userId);
+    List<Task> getActiveQuests(Long userId);
+
+    List<Task> getWinHistoryQuests(Long userId);
+
+    List<Task> getLoseHistoryQuests(Long userId);
 }

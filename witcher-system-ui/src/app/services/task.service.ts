@@ -6,6 +6,7 @@ import {RegionsEnum} from '../enums/regions.enum';
 import {CurrencyEnum} from '../enums/currency.enum';
 import {TaskCreateModel} from '../models/task/task.create.model';
 import {Constants} from '../utils/constants';
+import {TasksViewModel} from '../models/task/tasks.view.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class TaskService {
   }
 
   quests(token: { Authorization: string }){
-    return this.http.post<TaskViewModel[]>(Constants.PATH_QUESTS, null, {headers: token});
+    return this.http.post<TasksViewModel[]>(Constants.PATH_QUESTS, null, {headers: token});
   }
 
   mapTask(data): TaskViewModel {
@@ -44,7 +45,15 @@ export class TaskService {
     return this.http.post<TaskViewModel>(Constants.PATH_CANCEL_TASK + task, null, {headers: token});
   }
 
+  complete(token: { Authorization: string }, task: string) {
+    return this.http.post<TaskViewModel>(Constants.PATH_COMPLETE_TASK + task, null, {headers: token});
+  }
+
   edit(task): void {
+    // TODO
+  }
+
+  delete(task): void {
     // TODO
   }
 

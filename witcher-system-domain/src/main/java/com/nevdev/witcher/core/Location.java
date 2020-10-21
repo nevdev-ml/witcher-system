@@ -27,6 +27,7 @@ public class Location {
     @OneToMany(
             mappedBy = "location",
             fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     @JsonIgnoreProperties("location")

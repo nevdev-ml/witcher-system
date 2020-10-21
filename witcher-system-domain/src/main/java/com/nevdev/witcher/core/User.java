@@ -51,13 +51,13 @@ public class User {
 
     @ManyToMany(
             fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL
+            cascade = CascadeType.MERGE
     )
     @JsonIgnoreProperties("users")
     @JoinTable(
             name = "USER_AUTHORITY",
-            joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
+            joinColumns = {@JoinColumn(name = "USER_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID")})
     private List<Authority> authorities;
 
     @ManyToMany(
@@ -67,10 +67,26 @@ public class User {
     @JsonIgnoreProperties("witchers")
     private List<Task> tasks;
 
+    @ManyToMany(
+            mappedBy = "witchersCompleted",
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnoreProperties("witchersCompleted")
+    private List<Task> tasksCompleted;
+
+    @OneToOne(
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL
+    )
+    @MapsId
+    @NotNull
+    private Bank bank;
+
     public User(){}
 
     public User(String username, String password, Role role, String firstName, String lastName, String email,
-                @NotNull Boolean enabled, @NotNull Date lastPasswordResetDate, List<Authority> authorities){
+                @NotNull Boolean enabled, @NotNull Date lastPasswordResetDate, List<Authority> authorities,
+                @NotNull Boolean kingRepository){
         this.username = username;
         this.password = password;
         this.role = role;
@@ -80,6 +96,7 @@ public class User {
         this.enabled = enabled;
         this.lastPasswordResetDate = lastPasswordResetDate;
         this.authorities = authorities;
+        this.bank = new Bank(kingRepository);
     }
 
     public User(String username, Role role, String firstName, String lastName, String email){
