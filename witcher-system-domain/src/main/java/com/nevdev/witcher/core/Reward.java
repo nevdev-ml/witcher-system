@@ -44,11 +44,16 @@ public class Reward {
 
     public Reward(@NotNull Double reward, @NotNull Currency type){
         this.reward = reward - (reward * taxConstant);
-        this.tax = reward * taxConstant;
+        setTax(reward);
         this.type = type;
     }
 
-    public void setTax(Double reward){
+    private void setTax(Double reward){
         this.tax = reward * taxConstant;
+    }
+
+    public void setReward(Double reward){
+        this.reward = reward - (reward * taxConstant);
+        setTax(reward);
     }
 }

@@ -1,14 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {TaskService} from '../../services/task.service';
+import {TaskService} from '../../services/task-service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {TaskViewModel} from '../../models/task/task.view.model';
+import {TaskViewModel} from '../../models/task/task-view-model';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import { faExternalLinkAlt, faCheckSquare, faEdit, faPlusCircle, faMinusSquare, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import {TaskUserModel} from '../../models/task/task.user.model';
+import {TaskUserModel} from '../../models/task/task-user-model';
 import {Constants} from '../../utils/constants';
-import {TasksViewModel} from '../../models/task/tasks.view.model';
+import {TasksViewModel} from '../../models/task/tasks-view-model';
 
 @Component({
   selector: 'app-tasks',
@@ -24,7 +24,7 @@ export class TasksComponent implements OnInit {
   loseTasks: TaskViewModel[];
 
   role = localStorage.getItem(Constants.ROLES);
-  id = localStorage.getItem(Constants.ID);
+  id = Number(localStorage.getItem(Constants.ID));
   isDataAvailable = false;
   displayedColumns: string[] = ['id', 'createOn', 'location.region', 'beast', 'reward.reward', 'customer', 'action'];
   dataSource = new MatTableDataSource<TaskViewModel>(this.activeTasks);
@@ -59,7 +59,12 @@ export class TasksComponent implements OnInit {
       this.getTasks();
     }
     else{
-      this.getQuests();
+      if (this.role === 'USER'){
+        this.getCustomerQuests();
+      }
+      else{
+        this.getQuests();
+      }
     }
   }
 
@@ -69,7 +74,7 @@ export class TasksComponent implements OnInit {
     } else{
       this.taskService.tasks({Authorization : localStorage.getItem(Constants.TOKEN)}).subscribe(
         data => {
-          this.init(data, false);
+          this.init(data, false, false);
           this.getTypeQuests(this.activeTasks);
         },
         error => {
@@ -84,7 +89,22 @@ export class TasksComponent implements OnInit {
     } else{
       this.taskService.quests({Authorization : localStorage.getItem(Constants.TOKEN)}).subscribe(
         data => {
-          this.init(data, true);
+          this.init(data, true, false);
+          this.chooseTypeQuests();
+        },
+        error => {
+          console.log(error);
+        });
+    }
+  }
+
+  getCustomerQuests(): void {
+    if (localStorage.getItem(Constants.TOKEN) == null) {
+      this.router.navigate(['/login']).then(() => console.log(Constants.NOT_AUTH));
+    } else{
+      this.taskService.customerQuests({Authorization : localStorage.getItem(Constants.TOKEN)}).subscribe(
+        data => {
+          this.init(data, true, true);
           this.chooseTypeQuests();
         },
         error => {
@@ -105,28 +125,35 @@ export class TasksComponent implements OnInit {
     }
   }
 
-  init(data, isProfile) {
-    if (isProfile){
-      this.tasks = data;
-      this.tasks.active.forEach((item) => {
-        this.taskService.mapTask(item);
-      });
-      this.activeTasks = this.tasks.active;
-
-      this.tasks.win.forEach((item) => {
-        this.taskService.mapTask(item);
-      });
-      this.winTasks = this.tasks.win;
-      this.tasks.lose.forEach((item) => {
-        this.taskService.mapTask(item);
-      });
-      this.loseTasks = this.tasks.lose;
-    }
-    else{
+  init(data, isProfile: boolean, isCustomer: boolean) {
+    if (isCustomer){
       data.forEach((item) => {
         this.taskService.mapTask(item);
       });
       this.activeTasks = data;
+    } else{
+      if (isProfile){
+        this.tasks = data;
+        this.tasks.active.forEach((item) => {
+          this.taskService.mapTask(item);
+        });
+        this.activeTasks = this.tasks.active;
+
+        this.tasks.win.forEach((item) => {
+          this.taskService.mapTask(item);
+        });
+        this.winTasks = this.tasks.win;
+        this.tasks.lose.forEach((item) => {
+          this.taskService.mapTask(item);
+        });
+        this.loseTasks = this.tasks.lose;
+      }
+      else{
+        data.forEach((item) => {
+          this.taskService.mapTask(item);
+        });
+        this.activeTasks = data;
+      }
     }
   }
 
@@ -144,8 +171,7 @@ export class TasksComponent implements OnInit {
         this.router.navigate(['/login']).then(() => console.log(Constants.NOT_AUTH));
       } else{
         this.taskService.accept({Authorization : localStorage.getItem(Constants.TOKEN)}, task.id).subscribe(
-          data => {
-            console.log(data);
+          () => {
             this.ngOnInit();
           },
           error => {
@@ -161,8 +187,7 @@ export class TasksComponent implements OnInit {
         this.router.navigate(['/login']).then(() => console.log(Constants.NOT_AUTH));
       } else{
         this.taskService.cancel({Authorization : localStorage.getItem(Constants.TOKEN)}, task.id).subscribe(
-          data => {
-            console.log(data);
+          () => {
             this.ngOnInit();
           },
           error => {
@@ -177,11 +202,11 @@ export class TasksComponent implements OnInit {
   }
 
   edit(task): void {
-    this.taskService.edit(task);
+    this.router.navigate(['edit', task.id]).then(() => console.log(Constants.NAVIGATED));
   }
 
   delete(task): void {
-    this.taskService.delete(task);
+    this.router.navigate(['delete', task.id]).then(() => console.log(Constants.NAVIGATED));
   }
 
   add(): void {
@@ -191,7 +216,7 @@ export class TasksComponent implements OnInit {
   isContainsWitcher(witchers: TaskUserModel[]): boolean {
     let check = false;
     witchers.forEach(item => {
-      if (item.id == this.id){
+      if (item.id === this.id){
         return check = true;
       }
     });

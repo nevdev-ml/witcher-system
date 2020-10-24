@@ -19,12 +19,12 @@ import java.util.List;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "user_seq")
     @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 32)
     private String username;
 
     @JsonProperty(access = Access.WRITE_ONLY)
@@ -50,8 +50,8 @@ public class User {
     private Date lastPasswordResetDate;
 
     @ManyToMany(
-            fetch = FetchType.EAGER,
-            cascade = CascadeType.MERGE
+            fetch = FetchType.EAGER//,
+            //cascade = CascadeType.MERGE
     )
     @JsonIgnoreProperties("users")
     @JoinTable(

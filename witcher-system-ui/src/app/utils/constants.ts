@@ -1,6 +1,6 @@
-import {BeastsEnum} from '../enums/beasts.enum';
-import {RegionsEnum} from '../enums/regions.enum';
-import {CurrencyEnum} from '../enums/currency.enum';
+import {BeastsEnum} from '../enums/beasts-enum';
+import {RegionsEnum} from '../enums/regions-enum';
+import {CurrencyEnum} from '../enums/currency-enum';
 
 export class Constants {
   static API_URL = 'http://localhost:8080';
@@ -14,7 +14,11 @@ export class Constants {
   static PATH_TASK = Constants.API_URL + '/task/details/';
   static PATH_TASKS = Constants.API_URL + '/task/tasks/';
   static PATH_QUESTS = Constants.API_URL + '/task/quests/';
+  static PATH_CUSTOMER_QUESTS = Constants.API_URL + '/task/customer-quests/';
   static PATH_ADD_TASK = Constants.API_URL + '/task/add/';
+  static PATH_EDIT_TASK = Constants.API_URL + '/task/edit/';
+  static PATH_DELETE_TASK = Constants.API_URL + '/task/delete/';
+
   static PATH_ACCEPT_TASK = Constants.API_URL + '/task/accept/';
   static PATH_CANCEL_TASK = Constants.API_URL + '/task/cancel/';
   static PATH_COMPLETE_TASK = Constants.API_URL + '/task/complete/';

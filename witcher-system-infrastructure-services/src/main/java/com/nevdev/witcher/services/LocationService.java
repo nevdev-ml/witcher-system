@@ -33,7 +33,11 @@ public class LocationService implements ILocationService {
 
     @Override
     public Location edit(Location model) {
-        return locationRepository.saveAndFlush(model);
+        Location location = find(model.getRegion());
+        if(location == null){
+            return locationRepository.save(model);
+        }
+        return location;
     }
 
     @Override

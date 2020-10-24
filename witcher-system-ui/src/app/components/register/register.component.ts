@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {User} from '../../models/model.user';
-import {AccountService} from '../../services/account.service';
+import {User} from '../../models/model-user';
+import {AccountService} from '../../services/account-service';
 import {Router} from '@angular/router';
 import {ObjectBase} from '../../models/objectBase';
 import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
@@ -60,11 +60,8 @@ export class RegisterComponent implements OnInit {
     this.user.username = this.form.get('username').value;
     this.user.email = this.form.get('email').value;
     this.user.password = this.form.get('password').value;
-    console.log(this.user);
-    console.log(this.checkedValue);
     this.user.checkedRole = this.checkedValue;
-    this.accountService.register(this.user).subscribe(data => {
-        console.log(data);
+    this.accountService.register(this.user).subscribe(() => {
         this.router.navigate(['/login']).then(() => console.log(Constants.SUCCESS_REGISTER));
       }, err => {
         console.log(err);

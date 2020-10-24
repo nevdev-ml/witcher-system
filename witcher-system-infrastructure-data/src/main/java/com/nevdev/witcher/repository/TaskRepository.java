@@ -12,5 +12,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findByDone(Boolean done);
 
+    List<Task> findByCustomerId(Long id);
+
     List<Task> findByWitcherIdAndDone(Long witcherId, Boolean done);
 }

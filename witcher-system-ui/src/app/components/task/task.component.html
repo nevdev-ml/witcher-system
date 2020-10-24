@@ -123,11 +123,22 @@
     </div>
   </div>
 
-  <button *ngIf="role == 'WITCHER' && !task.done && !isContainsWitcher(task.witchers)" mat-stroked-button
-          class="btn-block" (click)="accept()">Принять задание</button>
-  <button *ngIf="role == 'WITCHER' && !task.done && isContainsWitcher(task.witchers)" mat-stroked-button
-          class="btn-block" (click)="cancel()">Отменить задание</button>
-  <button *ngIf="role == 'KING'" mat-stroked-button class="btn-block" (click)="edit(task)">Редактировать задание</button>
+  <button *ngIf="role == 'WITCHER' && !task.done && !isContainsWitcher(task.witchers) && !isContainsWitcher(task.witchersCompleted)"
+          mat-stroked-button class="btn-block" (click)="accept()">Принять задание</button>
+  <button *ngIf="role == 'WITCHER' && !task.done && (isContainsWitcher(task.witchers) || isContainsWitcher(task.witchersCompleted))"
+          mat-stroked-button class="btn-block" (click)="cancel()">Отменить задание</button>
+  <button *ngIf="role == 'WITCHER' && !task.done && isContainsWitcher(task.witchers)"
+          mat-stroked-button class="btn-block" (click)="complete()">Задание выполнено</button>
+  <button *ngIf="role == 'WITCHER' && !task.done && isContainsWitcher(task.witchersCompleted)"
+          mat-stroked-button class="btn-block" (click)="complete()">Задание не выполнено</button>
+
+  <button *ngIf="(role == 'KING' || id == task.customer.id) && !task.done" mat-stroked-button class="btn-block" (click)="edit(task)">Редактировать задание</button>
+  <button *ngIf="(role == 'KING' || id == task.customer.id) && !task.done" mat-stroked-button class="btn-block" (click)="delete(task)">Удалить задание</button>
+  <button *ngIf="(role == 'KING' || id == task.customer.id) && !task.done" mat-stroked-button class="btn-block" (click)="getCompletedWitchers(task)">Список выполнивших задание</button>
+
+
   <button mat-stroked-button class="btn-block" (click)="backToTasks()">Список заданий</button>
   <button *ngIf="role == 'WITCHER'" mat-stroked-button class="btn-block" (click)="backToQuests()">Список принятых заданий</button>
+  <button *ngIf="role == 'USER'" mat-stroked-button class="btn-block" (click)="backToQuests()">Список моих заданий</button>
+
 </div>

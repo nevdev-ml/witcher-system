@@ -49,7 +49,7 @@ public class InitService {
                 Role.BLACKSMITH));
         List<String> firstNames = new ArrayList<>(Arrays.asList("Фольтест", "Геральт", "Лето", "Бедный", "Жадный",
                 "Умелый"));
-        List<String> lastNames = new ArrayList<>(Arrays.asList("Темерский", "Ривийский", "из Гулеты", "Простолюдин",
+        List<String> lastNames = new ArrayList<>(Arrays.asList("Темерский", "Ривийский", "Гулета", "Простолюдин",
                 "Купец", "Кузнец"));
         List<String> emails = new ArrayList<>(Arrays.asList("foltest@gmail.com", "geerkus@gmail.com",
                 "witcher@gmail.com", "vodka@gmail.com", "trade@gmail.com", "blacksmith@gmail.com"));

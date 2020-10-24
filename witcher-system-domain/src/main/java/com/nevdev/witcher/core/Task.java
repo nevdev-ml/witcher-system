@@ -25,9 +25,7 @@ public class Task {
 
     private String locationComment;
 
-    @ManyToOne(
-            fetch = FetchType.EAGER
-    )
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnoreProperties("tasks")
     @NotNull
     private Location location;
@@ -59,8 +57,7 @@ public class Task {
     private Long witcherId;
 
     @ManyToMany(
-            fetch = FetchType.LAZY//,
-            //cascade = CascadeType.MERGE
+            fetch = FetchType.LAZY
     )
     @JsonIgnoreProperties("tasksCompleted")
     @JoinTable(
@@ -70,8 +67,7 @@ public class Task {
     private List<User> witchersCompleted = new ArrayList<>();
 
     @ManyToMany(
-            fetch = FetchType.LAZY//,
-//            cascade = CascadeType.MERGE
+            fetch = FetchType.LAZY
     )
     @JsonIgnoreProperties("tasks")
     @JoinTable(

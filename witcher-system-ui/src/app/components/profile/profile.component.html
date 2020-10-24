@@ -12,4 +12,10 @@
     </p>
     <app-tasks></app-tasks>
   </div>
+  <div *ngIf="role == 'USER'">
+    <p>
+      <span class="title">Ваши задания:</span>
+    </p>
+    <app-tasks></app-tasks>
+  </div>
 </div>

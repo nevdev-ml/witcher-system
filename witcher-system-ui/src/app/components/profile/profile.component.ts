@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {AuthService} from '../../services/auth.service';
+import {AuthService} from '../../services/auth-service';
 import {Router} from '@angular/router';
-import {UserView} from '../../models/user.view';
+import {UserView} from '../../models/user-view';
 import {Constants} from '../../utils/constants';
 
 @Component({
@@ -27,7 +27,6 @@ export class ProfileComponent implements OnInit {
     } else{
       this.authService.profile({Authorization : localStorage.getItem(Constants.TOKEN)}).subscribe(
         data => {
-          console.log(data);
           this.currentUser = data;
           this.isDataAvailable = true;
         },

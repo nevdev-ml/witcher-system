@@ -6,9 +6,9 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { AuthService } from './services/auth.service';
+import { AuthService } from './services/auth-service';
 import {HttpClientModule} from '@angular/common/http';
-import {AccountService} from './services/account.service';
+import {AccountService} from './services/account-service';
 import { ProfileComponent } from './components/profile/profile.component';
 import {routing} from './app.routing';
 import {UrlPermission} from './permission/permission';
@@ -27,7 +27,7 @@ import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TaskCreateComponent } from './components/task.create/task.create.component';
+import { TaskCreateComponent } from './components/task-create/task-create.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
@@ -38,6 +38,13 @@ import {MatListModule} from '@angular/material/list';
 import { HomeComponent } from './components/home/home.component';
 import { ForgotComponent } from './components/forgot/forgot.component';
 import { ResetComponent } from './components/reset/reset.component';
+import { TaskRewardComponent } from './components/task-reward/task-reward.component';
+import {UrlPermissionUser} from './permission/url-permission-user';
+import {UrlPermissionKing} from './permission/url-permission-king';
+import {UrlPermissionWitcher} from './permission/url-permission-witcher';
+import { UrlPermissionUserKing } from './permission/url-permission-user-king';
+import { TaskEditComponent } from './components/task-edit/task-edit.component';
+import { TaskDeleteComponent } from './components/task-delete/task-delete.component';
 registerLocaleData(localeRu);
 
 @NgModule({
@@ -52,7 +59,10 @@ registerLocaleData(localeRu);
     TaskCreateComponent,
     HomeComponent,
     ForgotComponent,
-    ResetComponent
+    ResetComponent,
+    TaskRewardComponent,
+    TaskEditComponent,
+    TaskDeleteComponent
   ],
   imports: [
     BrowserModule,
@@ -76,7 +86,8 @@ registerLocaleData(localeRu);
     MatSidenavModule,
     MatListModule
   ],
-  providers: [AuthService, AccountService, UrlPermission, { provide: LOCALE_ID, useValue: 'ru' }],
+  providers: [AuthService, AccountService, UrlPermission, UrlPermissionUser, UrlPermissionKing, UrlPermissionWitcher, UrlPermissionUserKing,
+    { provide: LOCALE_ID, useValue: 'ru' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,8 +1,8 @@
 package com.nevdev.witcher.services;
 
 import com.nevdev.witcher.application.ITaskService;
-import com.nevdev.witcher.core.Beast;
-import com.nevdev.witcher.core.Task;
+import com.nevdev.witcher.core.*;
+import com.nevdev.witcher.enums.Currency;
 import com.nevdev.witcher.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+
 
 @Service
 public class TaskService implements ITaskService {
@@ -24,7 +24,10 @@ public class TaskService implements ITaskService {
     LocationService locationService;
 
     @Autowired
-    UserService userService;
+    BankService bankService;
+
+    @Autowired
+    DepositService depositService;
 
     @Override
     public List<Task> find(String title) {
@@ -58,24 +61,46 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public Task create(Task model) {
-        List<Beast> beasts = new ArrayList<>();
-        for(Beast item : model.getBeasts()){
-            beasts.add(beastService.create(item));
+    public List<Task> getCustomerQuests(Long userId) {
+        return taskRepository.findByCustomerId(userId);
+    }
+
+    @Override
+    public void rewardQuest(User customer, User witcher, Reward reward) {
+        Currency currency = reward.getType();
+        Deposit customerDeposit = bankService.getDeposits(customer.getBank(), currency).get(0);
+        Deposit witcherDeposit = bankService.getDeposits(witcher.getBank(), currency).get(0);
+        List<Bank> kingBanks = bankService.find(true);
+        Double tax = reward.getTax() / kingBanks.size();
+        for(Bank bank : kingBanks){
+            Deposit kingDeposit = bankService.getDeposits(bank, currency).get(0);
+            kingDeposit.setBalance(kingDeposit.getBalance() + tax);
+            depositService.edit(kingDeposit);
         }
-        model.setBeasts(beasts);
-        model.setLocation(locationService.create(model.getLocation()));
-        return taskRepository.save(model);
+        customerDeposit.setBalance(customerDeposit.getBalance() - (reward.getTax() + reward.getReward()));
+        witcherDeposit.setBalance(witcherDeposit.getBalance() + reward.getReward());
+        depositService.edit(customerDeposit);
+        depositService.edit(witcherDeposit);
+    }
+
+    @Override
+    public Task create(Task model) {
+        return modify(model);
     }
 
     @Override
     public void delete(Task model) {
+        model.setWitchersCompleted(null);
+        model.setWitchers(null);
+        model.setBeasts(null);
+        model.getLocation().getTasks().remove(model);
         taskRepository.delete(model);
+        taskRepository.flush();
     }
 
     @Override
     public Task edit(Task model) {
-        return taskRepository.save(model);
+        return modify(model);
     }
 
     @Override
@@ -89,5 +114,16 @@ public class TaskService implements ITaskService {
     @Override
     public Iterable<Task> getAll() {
         return taskRepository.findAll();
+    }
+
+    private Task modify(Task model){
+        List<Beast> beasts = new ArrayList<>();
+        for(Beast item : model.getBeasts()){
+            beasts.add(beastService.create(item));
+        }
+        model.setBeasts(beasts);
+        Location location = locationService.create(model.getLocation());
+        location.addTask(model);
+        return taskRepository.save(model);
     }
 }

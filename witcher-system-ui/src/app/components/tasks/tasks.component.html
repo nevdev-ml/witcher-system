@@ -44,12 +44,14 @@
         <th mat-header-cell *matHeaderCellDef> Действия </th>
         <td mat-cell *matCellDef="let row">
           <fa-icon [icon]="faOpen" [fixedWidth]="true" size="lg" (click)="read(row)"></fa-icon>
-          <fa-icon *ngIf="role == 'WITCHER' && !row.done && !isContainsWitcher(row.witchers)" [icon]="faAccept"
-                   [fixedWidth]="true" size="lg" (click)="accept(row)"></fa-icon>
-          <fa-icon *ngIf="role == 'WITCHER' && !row.done && isContainsWitcher(row.witchers)" [icon]="faCancel"
+          <fa-icon *ngIf="role == 'WITCHER' && !row.done && !isContainsWitcher(row.witchers) &&
+            !isContainsWitcher(row.witchersCompleted)" [icon]="faAccept" [fixedWidth]="true" size="lg"
+                   (click)="accept(row)"></fa-icon>
+          <fa-icon *ngIf="role == 'WITCHER' && !row.done && (isContainsWitcher(row.witchers) ||
+            isContainsWitcher(row.witchersCompleted))" [icon]="faCancel"
                    [fixedWidth]="true" size="lg" (click)="cancel(row)"></fa-icon>
-          <fa-icon *ngIf="role == 'KING' || id == row.customerId" [icon]="faEdit" [fixedWidth]="true" size="lg" (click)="edit(row)"></fa-icon>
-          <fa-icon *ngIf="role == 'KING' || id == row.customerId" [icon]="faTrashAlt" [fixedWidth]="true" size="lg" (click)="delete(row)"></fa-icon>
+          <fa-icon *ngIf="(role == 'KING' || id == row.customerId) && !row.done" [icon]="faEdit" [fixedWidth]="true" size="lg" (click)="edit(row)"></fa-icon>
+          <fa-icon *ngIf="(role == 'KING' || id == row.customerId) && !row.done" [icon]="faTrashAlt" [fixedWidth]="true" size="lg" (click)="delete(row)"></fa-icon>
         </td>
       </ng-container>
 

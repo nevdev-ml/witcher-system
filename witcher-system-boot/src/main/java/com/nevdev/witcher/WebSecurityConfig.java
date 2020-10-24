@@ -92,7 +92,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/account/register","/account/login", "/account/logout", "/account/forgot/**", "/account/reset/**").permitAll()
                 .antMatchers("/task/details/**", "/task/tasks").authenticated()//.permitAll()//.hasAuthority("USER")
-                .antMatchers("/task/add").hasAnyAuthority("USER", "KING")
+                .antMatchers("/task/add", "/task/customer-quests", "/task/reward/**", "/task/refuse/**",
+                        "/task/delete/**", "/task/edit/**", "/task/delete/**").hasAnyAuthority("USER", "KING")
                 .antMatchers("/task/accept/**", "/task/cancel/**", "/task/quests").hasAuthority("WITCHER")
 //                .antMatchers().permitAll()
                 .anyRequest().hasAnyAuthority("USER", "KING", "BLACKSMITH", "VENDOR", "WITCHER")

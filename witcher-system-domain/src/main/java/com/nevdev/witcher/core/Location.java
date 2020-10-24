@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,7 +27,7 @@ public class Location {
 
     @OneToMany(
             mappedBy = "location",
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
@@ -37,5 +38,11 @@ public class Location {
 
     public Location(@NotNull Region region){
         this.region = region;
+        this.tasks = new ArrayList<>();
+    }
+
+    public void addTask(Task task) {
+        this.tasks.add(task);
+        task.setLocation(this);
     }
 }
