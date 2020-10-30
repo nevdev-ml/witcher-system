@@ -27,7 +27,7 @@ export class ProfileComponent implements OnInit {
     } else{
       this.authService.profile({Authorization : localStorage.getItem(Constants.TOKEN)}).subscribe(
         data => {
-          this.currentUser = data;
+          this.currentUser = this.authService.mapUser(data);
           this.isDataAvailable = true;
         },
         error => {

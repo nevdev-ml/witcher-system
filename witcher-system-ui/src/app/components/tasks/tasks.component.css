@@ -1,11 +1,8 @@
-table {
-  width: 100%;
-}
-
-.add {
-  float: right;
+.white-block {
+  background: white;
 }
 
 .add-block {
-  background: white;
+  display: flex;
+  flex-direction: row-reverse;
 }

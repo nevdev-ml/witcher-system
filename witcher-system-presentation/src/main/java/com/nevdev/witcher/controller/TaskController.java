@@ -93,11 +93,20 @@ public class TaskController {
         String username = jwtTokenUtil.getUsernameFromToken(token);
         User user = userService.find(username);
         if(user != null){
-            List<TaskViewModel> tasks = new ArrayList<>();
-            taskService.getCustomerQuests(user.getId()).forEach((item) -> tasks.add(new TaskViewModel(item,
+            List<TaskViewModel> allTasks = new ArrayList<>();
+            taskService.getCustomerQuests(user.getId()).forEach((item) -> allTasks.add(new TaskViewModel(item,
                     userService.get(item.getCustomerId()),
                     userService.get(item.getWitcherId()))
             ));
+            List<TaskViewModel> activeTasks = new ArrayList<>();
+            allTasks.stream().filter(item -> !item.getDone()).forEach(activeTasks::add);
+            List<TaskViewModel> doneTasks = new ArrayList<>();
+            allTasks.stream().filter(item -> item.getWitchersCompleted().size() > 0).forEach(doneTasks::add);
+            List<TaskViewModel> historyTasks = new ArrayList<>();
+            allTasks.stream().filter(Task::getDone).forEach(historyTasks::add);
+
+            TaskListViewModel tasks = new TaskListViewModel(activeTasks, doneTasks, historyTasks);
+
             logger.info("Get all customer tasks");
             return ResponseEntity.ok(tasks);
         }
@@ -145,8 +154,12 @@ public class TaskController {
         if(user != null && task != null){
             task.getWitchers().add(user);
             task = taskService.edit(task);
+
             logger.info("Accept task");
-            return ResponseEntity.ok(task);
+            return ResponseEntity.ok(new TaskViewModel(task,
+                    userService.get(task.getCustomerId()),
+                    userService.get(task.getWitcherId()))
+            );
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
@@ -162,7 +175,9 @@ public class TaskController {
             task.getWitchersCompleted().remove(user);
             task = taskService.edit(task);
             logger.info("Cancel task");
-            return ResponseEntity.ok(task);
+            return ResponseEntity.ok(new TaskViewModel(task,
+                    userService.get(task.getCustomerId()),
+                    userService.get(task.getWitcherId())));
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }

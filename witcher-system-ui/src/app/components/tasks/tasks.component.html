@@ -1,66 +1,29 @@
-<div [hidden]="!isDataAvailable" class="add-block">
-  <fa-icon class="add" *ngIf="role == 'USER' || role == 'KING'" [icon]="faAdd" [fixedWidth]="true" size="3x" (click)="add()"></fa-icon>
-  <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource" matSort>
-
-      <!-- Id Column -->
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Номер заказа </th>
-        <td mat-cell *matCellDef="let row"> {{row.id}} </td>
-      </ng-container>
-
-      <!-- Location Column -->
-      <ng-container matColumnDef="location.region">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Локация </th>
-        <td mat-cell *matCellDef="let row"> {{row.location.region}} </td>
-      </ng-container>
-
-      <!-- Beast Column -->
-      <ng-container matColumnDef="beast">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Бестия </th>
-        <td mat-cell *matCellDef="let row"><div *ngFor="let i of row.beasts">{{i.beastName}}</div></td>
-      </ng-container>
-
-      <!-- CreateOn Column -->
-      <ng-container matColumnDef="createOn">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Дата создания </th>
-        <td mat-cell *matCellDef="let row"> {{row.createOn | date:'longDate'}} </td>
-      </ng-container>
-
-      <!-- Reward Column -->
-      <ng-container matColumnDef="reward.reward">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Награда </th>
-        <td mat-cell *matCellDef="let row">{{row.reward.reward}} {{row.reward.type}} </td>
-      </ng-container>
-
-      <!-- Customer Column -->
-      <ng-container matColumnDef="customer">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Заказчик </th>
-        <td mat-cell *matCellDef="let row"> {{row.customer.firstName}} {{row.customer.lastName}}</td>
-      </ng-container>
-
-      <!-- Action Column -->
-      <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef> Действия </th>
-        <td mat-cell *matCellDef="let row">
-          <fa-icon [icon]="faOpen" [fixedWidth]="true" size="lg" (click)="read(row)"></fa-icon>
-          <fa-icon *ngIf="role == 'WITCHER' && !row.done && !isContainsWitcher(row.witchers) &&
-            !isContainsWitcher(row.witchersCompleted)" [icon]="faAccept" [fixedWidth]="true" size="lg"
-                   (click)="accept(row)"></fa-icon>
-          <fa-icon *ngIf="role == 'WITCHER' && !row.done && (isContainsWitcher(row.witchers) ||
-            isContainsWitcher(row.witchersCompleted))" [icon]="faCancel"
-                   [fixedWidth]="true" size="lg" (click)="cancel(row)"></fa-icon>
-          <fa-icon *ngIf="(role == 'KING' || id == row.customerId) && !row.done" [icon]="faEdit" [fixedWidth]="true" size="lg" (click)="edit(row)"></fa-icon>
-          <fa-icon *ngIf="(role == 'KING' || id == row.customerId) && !row.done" [icon]="faTrashAlt" [fixedWidth]="true" size="lg" (click)="delete(row)"></fa-icon>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-    <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+<div [hidden]="!isDataAvailable" class="white-block">
+  <div class="add-block">
+    <fa-icon *ngIf="role == 'USER' || role == 'KING'" [icon]="faAdd" [fixedWidth]="true" size="3x" (click)="add()"></fa-icon>
   </div>
-</div>
-<div *ngIf="!isDataAvailable">
-  <p>В данный момент нет заданий</p>
+  <div class="mat-elevation-z8">
+    <div *ngIf="!isWitcherProfile && !isCustomerProfile">
+      <app-tasks-table [tasksList]="this.activeTasks"></app-tasks-table>
+    </div>
+    <div *ngIf="isWitcherProfile || isCustomerProfile">
+      <mat-tab-group>
+        <mat-tab label="Активные заказы">
+          <ng-template matTabContent>
+            <app-tasks-table [tasksList]="this.activeTasks"></app-tasks-table>
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="Выполненные заказы">
+          <ng-template matTabContent>
+            <app-tasks-table [tasksList]="this.winTasks"></app-tasks-table>
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="История">
+          <ng-template matTabContent>
+            <app-tasks-table [tasksList]="this.loseTasks"></app-tasks-table>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
 </div>

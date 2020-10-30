@@ -99,11 +99,12 @@ public class User {
         this.bank = new Bank(kingRepository);
     }
 
-    public User(String username, Role role, String firstName, String lastName, String email){
+    public User(String username, Role role, String firstName, String lastName, String email, Bank bank){
         this.username = username;
         this.role = role;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.bank = bank;
     }
 }

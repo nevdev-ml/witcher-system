@@ -107,46 +107,8 @@ public class AccountController {
         String username = jwtTokenUtil.getUsernameFromToken(token);
         JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
         Role role = Role.valueOf(((GrantedAuthority) ((ArrayList) user.getAuthorities()).get(0)).getAuthority());
-        return new User(user.getUsername(), role, user.getFirstName(), user.getLastName(), user.getEmail());
-    }
-
-
-    private void addBuiltInUser(String name, String password, Role authorityName){
-        User user = new User();
-        user.setUsername(name);
-        user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
-        user.setEmail(String.format("%1$s@%1$s.com", name));
-        user.setFirstName(name.substring(0, 1).toUpperCase()+name.substring(1));
-        user.setLastName(name.substring(0, 1).toUpperCase()+name.substring(1) + "ov");
-        user.setEnabled(true);
-        user.setLastPasswordResetDate(new Date(System.currentTimeMillis()));
-
-        Authority BLACKSMITH = new Authority();
-        BLACKSMITH.setRoleName(Role.BLACKSMITH);
-        Authority VENDOR = new Authority();
-        VENDOR.setRoleName(Role.VENDOR);
-        Authority USER = new Authority();
-        USER.setRoleName(Role.USER);
-        Authority KING = new Authority();
-        KING.setRoleName(Role.KING);
-        Authority WITCHER = new Authority();
-        WITCHER.setRoleName(Role.WITCHER);
-        authorityService.create(BLACKSMITH);
-        authorityService.create(VENDOR);
-        authorityService.create(USER);
-        authorityService.create(KING);
-        authorityService.create(WITCHER);
-
-        Authority userAuthority = authorityService.find(authorityName);
-
-
-        List<Authority> authoritiesList = new ArrayList<>();
-        authoritiesList.add(userAuthority);
-
-        user.setAuthorities(authoritiesList);
-        user.setRole(userAuthority.getRoleName());
-        userService.create(user);
-
+        User dbUser = userService.findUserByEmail(user.getEmail());
+        return new User(user.getUsername(), role, user.getFirstName(), user.getLastName(), user.getEmail(), dbUser.getBank());
     }
 
 

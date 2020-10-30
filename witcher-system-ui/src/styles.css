@@ -6,7 +6,7 @@ body {
 }
 
 .mat-drawer-container {
-  background-image: url(https://live.staticflickr.com/589/32404787782_d3acb0803e_h.jpg);
+  background-image: url(assets/background.jpg);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;

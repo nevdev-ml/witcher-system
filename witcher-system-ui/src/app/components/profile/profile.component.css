@@ -5,3 +5,10 @@
 .title {
   font-weight: 500;
 }
+
+.flex-container {
+  display: flex;
+}
+.space-between {
+  justify-content: space-between;
+}

@@ -8,7 +8,7 @@ export class UrlPermissionUserKing implements CanActivate {
   constructor(private router: Router) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    if (localStorage.getItem(Constants.ROLES) === 'USER') {
+    if (localStorage.getItem(Constants.ROLES) === 'USER' || localStorage.getItem(Constants.ROLES) === 'KING') {
       return true;
     }
     // not logged in so redirect to login page with the return url

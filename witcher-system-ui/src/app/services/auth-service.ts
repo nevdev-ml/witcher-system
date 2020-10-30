@@ -4,6 +4,9 @@ import {User} from '../models/model-user';
 import {Observable} from 'rxjs';
 import {Token} from '../models/token';
 import {Constants} from '../utils/constants';
+import {UserView} from '../models/user-view';
+import {CurrencyEnum} from '../enums/currency-enum';
+
 @Injectable()
 export class AuthService implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -33,7 +36,7 @@ export class AuthService implements HttpInterceptor {
   }
 
   profile(p: { Authorization: string }){
-    return this.http.get<User>(Constants.PATH_PROFILE, {headers: p});
+    return this.http.get<UserView>(Constants.PATH_PROFILE, {headers: p});
   }
 
   forgot(email: string) {
@@ -46,6 +49,13 @@ export class AuthService implements HttpInterceptor {
 
   reset(password: string, token: string) {
     return this.http.post<User>(Constants.PATH_RESET_PASSWORD + token, password);
+  }
+
+  mapUser(data): UserView {
+    data.bank.deposits.forEach((item, index) => {
+      data.bank.deposits[index].type = Constants.CurrencyMap.get(Number(CurrencyEnum[item.type]));
+    });
+    return data;
   }
 }
 

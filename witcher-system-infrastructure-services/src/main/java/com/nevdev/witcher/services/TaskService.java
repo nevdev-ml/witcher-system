@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
@@ -41,10 +43,18 @@ public class TaskService implements ITaskService {
 
     @Override
     public List<Task> getActiveQuests(Long userId) {
-        return new ArrayList<>(find(false)).stream()
-                .filter(item -> item.getWitchers().stream()
-                        .anyMatch(u -> u.getId().equals(userId)))
+        return Stream.of(
+                new ArrayList<>(find(false)).stream()
+                    .filter(item -> item.getWitchers().stream()
+                            .anyMatch(u -> u.getId().equals(userId)))
+                    .collect(Collectors.toList()),
+                new ArrayList<>(find(false)).stream()
+                    .filter(item -> item.getWitchersCompleted().stream()
+                            .anyMatch(u -> u.getId().equals(userId)))
+                    .collect(Collectors.toList()))
+                .flatMap(Collection::stream)
                 .collect(Collectors.toList());
+
     }
 
     @Override

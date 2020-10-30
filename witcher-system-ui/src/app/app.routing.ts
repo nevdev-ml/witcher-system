@@ -10,7 +10,6 @@ import {HomeComponent} from './components/home/home.component';
 import {ForgotComponent} from './components/forgot/forgot.component';
 import {ResetComponent} from './components/reset/reset.component';
 import {TaskRewardComponent} from './components/task-reward/task-reward.component';
-import {UrlPermissionWitcher} from './permission/url-permission-witcher';
 import {UrlPermissionUserKing} from './permission/url-permission-user-king';
 import {TaskEditComponent} from './components/task-edit/task-edit.component';
 import {TaskDeleteComponent} from './components/task-delete/task-delete.component';
@@ -27,8 +26,8 @@ const appRoutes: Routes = [
   { path: 'reward/:task', component: TaskRewardComponent, canActivate: [UrlPermissionUserKing] },
   { path: 'tasks', component: TasksComponent, canActivate: [UrlPermission] },
   { path: 'quests', component: TasksComponent, canActivate: [UrlPermission] },
-  { path: 'profile/completed', component: TasksComponent, canActivate: [UrlPermissionWitcher] }, // TODO
-  { path: 'profile/history', component: TasksComponent, canActivate: [UrlPermissionWitcher] }, // TODO
+  // { path: 'profile/history/completed', component: TasksComponent, canActivate: [UrlPermissionWitcher] }, // TODO
+  // { path: 'profile/history/attempts', component: TasksComponent, canActivate: [UrlPermissionWitcher] }, // TODO
   { path: 'add', component: TaskCreateComponent, canActivate: [UrlPermission] },
   { path: 'edit/:task', component: TaskEditComponent, canActivate: [UrlPermissionUserKing] },
   { path: 'delete/:task', component: TaskDeleteComponent, canActivate: [UrlPermissionUserKing] },

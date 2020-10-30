@@ -45,6 +45,8 @@ import {UrlPermissionWitcher} from './permission/url-permission-witcher';
 import { UrlPermissionUserKing } from './permission/url-permission-user-king';
 import { TaskEditComponent } from './components/task-edit/task-edit.component';
 import { TaskDeleteComponent } from './components/task-delete/task-delete.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import { TasksTableComponent } from './components/tasks-table/tasks-table.component';
 registerLocaleData(localeRu);
 
 @NgModule({
@@ -62,7 +64,8 @@ registerLocaleData(localeRu);
     ResetComponent,
     TaskRewardComponent,
     TaskEditComponent,
-    TaskDeleteComponent
+    TaskDeleteComponent,
+    TasksTableComponent
   ],
   imports: [
     BrowserModule,
@@ -84,7 +87,8 @@ registerLocaleData(localeRu);
     FlexLayoutModule,
     MatIconModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatTabsModule
   ],
   providers: [AuthService, AccountService, UrlPermission, UrlPermissionUser, UrlPermissionKing, UrlPermissionWitcher, UrlPermissionUserKing,
     { provide: LOCALE_ID, useValue: 'ru' }],
