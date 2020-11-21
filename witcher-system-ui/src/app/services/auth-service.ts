@@ -6,6 +6,7 @@ import {Token} from '../models/token';
 import {Constants} from '../utils/constants';
 import {UserView} from '../models/user-view';
 import {CurrencyEnum} from '../enums/currency-enum';
+import {RolesEnum} from '../enums/roles-enum';
 
 @Injectable()
 export class AuthService implements HttpInterceptor {
@@ -55,6 +56,7 @@ export class AuthService implements HttpInterceptor {
     data.bank.deposits.forEach((item, index) => {
       data.bank.deposits[index].type = Constants.CurrencyMap.get(Number(CurrencyEnum[item.type]));
     });
+    data.role = Constants.RoleMap.get(Number(RolesEnum[data.role]));
     return data;
   }
 }

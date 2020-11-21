@@ -17,14 +17,17 @@ import java.util.stream.Collectors;
 @Service
 public class InitService {
     private final TaskService taskService;
+    private final DealService dealService;
     private final UserService userService;
     private final AuthorityService authorityService;
 
     @Autowired
     UserRepository userRepository;
 
-    public InitService(TaskService taskService, UserService userService, AuthorityService authorityService) {
+    public InitService(TaskService taskService, UserService userService, AuthorityService authorityService,
+                       DealService dealService) {
         this.taskService = taskService;
+        this.dealService = dealService;
         this.userService = userService;
         this.authorityService = authorityService;
     }
@@ -35,8 +38,18 @@ public class InitService {
             List<User> users = initUsers();
             User customer = users.stream().filter(user -> user.getRole() == Role.USER).findFirst().orElse(null);
             List<User> witchers = users.stream().filter(user -> user.getRole() == Role.WITCHER).collect(Collectors.toList());
-            if (customer != null && witchers.size() > 0){
-                initTasks(customer.getId(), witchers);
+            User trader = users.stream().filter(user -> user.getRole() == Role.VENDOR).findFirst().orElse(null);
+            User blacksmith = users.stream().filter(user -> user.getRole() == Role.BLACKSMITH).findFirst().orElse(null);
+            if (witchers.size() > 0){
+                if (customer != null){
+                    initTasks(customer.getId(), witchers);
+                }
+                if (trader != null){
+                    initDeals(trader.getId(), witchers, true);
+                }
+                if (blacksmith != null){
+                    initDeals(blacksmith.getId(), witchers, false);
+                }
             }
         }
     }
@@ -127,6 +140,46 @@ public class InitService {
             task = taskService.create(task);
             task.setWitchers(witchers);
             taskService.edit(task);
+        }
+    }
+
+    private void initDeals(Long customerId, List<User> witchers, boolean isTrader){
+        List<String> types;
+        List<String> tradeObj;
+        if (isTrader){
+            types = new ArrayList<>(Arrays.asList("Покупка", "Продажа"));
+            tradeObj = new ArrayList<>(Arrays.asList("волос полуночницы", "глаз гуля", "зубов гуля", "крови гнильца",
+                    "мозга утопца", "ушей чудовищ", "шкуры чудовищ", "языка гнильца", "яиц виверны", "яиц драконида",
+                    "когтей виверны", "чешуи голема", "чешуи драконида", "эссенции бруксы", "языка кикиморы",
+                    "волос стрыги", "сердца альпа", "сердца накера", "сердца голема", "печени чудовищ", "перьев чудовищ",
+                    "крови чудовищ", "желудка чудовищ", "глаз чудовищ"));
+        } else {
+            types = new ArrayList<>(Arrays.asList("Ремонт", "Выкуп"));
+            tradeObj = new ArrayList<>(Arrays.asList("латных доспех", "кольчужных доспех", "стальных мечей",
+                    "рунных мечей", "метеоритных мечей", "серебряных мечей", "магических амулетов"));
+        }
+        List<Currency> currencies = new ArrayList<>(Arrays.asList(Currency.CROWN, Currency.DUCAT, Currency.OREN));
+        List<Integer> prices = new ArrayList<>();
+        for (int i = 500; i < 10000; i += 500){
+            prices.add(i);
+        }
+        Random random = new Random();
+        int taskCount = 5;
+        for(int i = 0; i < taskCount; i++){
+            String typeDeal = types.get(randomInt(random, types.size()));
+            String objDeal = tradeObj.get(randomInt(random, tradeObj.size()));
+            String title = String.format("%s %s", typeDeal, objDeal);
+            Currency currency = currencies.get(randomInt(random, currencies.size()));
+            Double price = (double)prices.get(randomInt(random, prices.size()));
+            Reward reward = new Reward(price, currency);
+            boolean isSale = false;
+            if (typeDeal.equals("Покупка") || (typeDeal.equals("Выкуп")) ){
+                isSale = true;
+            }
+            Deal deal = new Deal(title, title, isTrader, isSale, reward, customerId);
+            deal = dealService.create(deal);
+            deal.setExecutorsBookmarked(witchers);
+            dealService.edit(deal);
         }
     }
 

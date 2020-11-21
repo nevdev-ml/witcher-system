@@ -16,7 +16,7 @@
           <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide" type='button'>
             <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
-          <mat-error *ngIf="form.controls['password'].hasError('minLength')">
+          <mat-error *ngIf="form.controls['password'].hasError('minlength')">
             Пароль должен содержать хотя бы 6 символов
           </mat-error>
           <mat-error *ngIf="form.controls['password'].hasError('required')">
@@ -40,14 +40,14 @@
         </mat-form-field>
       </mat-card-content>
 
-      <button mat-stroked-button color="accent" class="btn-block" type="submit">Сбросить пароль</button>
+      <button mat-raised-button color="primary" class="btn-block btn-custom" type="submit">Сбросить пароль</button>
     </form>
 
     <div *ngIf="changeMessage && !errorMessage && !errorLink">
       <mat-label>{{changeMessage}}</mat-label>
-      <button mat-stroked-button class="btn-block" [routerLink]="['/login']">Залогиниться</button>
+      <button mat-raised-button color="primary" class="btn-block btn-custom" [routerLink]="['/login']">Войти</button>
     </div>
     <mat-error *ngIf="errorLink">{{errorLink}}</mat-error>
-    <button mat-stroked-button class="btn-block" [routerLink]="['/']">Вернуться на главную</button>
+    <button mat-raised-button color="accent" class="btn-block btn-custom" [routerLink]="['/']">Вернуться на главную</button>
   </mat-card>
 </div>

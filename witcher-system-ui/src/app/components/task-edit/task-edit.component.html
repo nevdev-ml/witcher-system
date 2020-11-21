@@ -48,8 +48,8 @@
         <!-- Beast -->
         <app-select-dropdown [objectList]="beasts" [title]="titleBeast" (changed)="onChangedBeast($event)"></app-select-dropdown>
       </mat-card-content>
-      <button mat-stroked-button color="accent" class="btn-block" type="submit">Редактировать заказ</button>
-      <button mat-stroked-button class="btn-block" (click)="back()">Вернуться</button>
+      <button mat-raised-button color="primary" class="btn-block btn-custom" type="submit">Редактировать заказ</button>
+      <button mat-raised-button color="accent" class="btn-block btn-custom" (click)="back()">Вернуться</button>
     </form>
   </mat-card>
 </div>

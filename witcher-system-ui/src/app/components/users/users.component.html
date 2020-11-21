@@ -1,0 +1,8 @@
+<div [hidden]="!isDataAvailable" class="white-block">
+  <div class="add-block">
+    <fa-icon *ngIf="role == 'KING'" [icon]="faAdd" [fixedWidth]="true" size="3x" (click)="add()"></fa-icon>
+  </div>
+  <div class="mat-elevation-z8">
+    <app-users-table [usersList]="this.users"></app-users-table>
+  </div>
+</div>

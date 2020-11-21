@@ -18,6 +18,8 @@
     <span class="spacer"></span>
     <span class="nav-tool-items" fxShow="true" fxHide.lt-md="true">
       <a *ngIf="isAuth()" mat-button routerLink="tasks" routerLinkActive="active">Заказы</a>
+      <a *ngIf="isAuth()" mat-button routerLink="shop" routerLinkActive="active">Лавка</a>
+      <a *ngIf="isAuth()" mat-button routerLink="workshop" routerLinkActive="active">Мастерская</a>
       <a *ngIf="isAuth()" mat-button routerLink="profile" routerLinkActive="active">Профиль</a>
       <a *ngIf="!isAuth()" mat-button routerLink="login" routerLinkActive="active">Войти</a>
       <a *ngIf="!isAuth()" mat-button mat-raised-button routerLink="register" routerLinkActive="active">Зарегистрироваться</a>
@@ -27,10 +29,12 @@
 </mat-toolbar>
 
 <mat-sidenav-container fxFlexFill class="app-header">
-  <mat-sidenav #menu>
+  <mat-sidenav class="mobile-menu" #menu>
     <mat-nav-list>
-      <a *ngIf="isAuth()" mat-list-item routerLink="tasks" routerLinkActive="active">Заказы</a>
       <a *ngIf="isAuth()" mat-list-item routerLink="profile" routerLinkActive="active">Профиль</a>
+      <a *ngIf="isAuth()" mat-list-item routerLink="tasks" routerLinkActive="active">Заказы</a>
+      <a *ngIf="isAuth()" mat-list-item routerLink="shop" routerLinkActive="active">Лавка</a>
+      <a *ngIf="isAuth()" mat-list-item routerLink="workshop" routerLinkActive="active">Мастерская</a>
 
       <a *ngIf="!isAuth()" mat-list-item routerLink="login" routerLinkActive="active">Войти</a>
       <a *ngIf="!isAuth()" mat-list-item routerLink="register" routerLinkActive="active">Зарегистрироваться</a>
@@ -46,6 +50,7 @@
   </mat-sidenav-content>
 
 </mat-sidenav-container>
+
 
 
 

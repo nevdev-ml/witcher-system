@@ -1,5 +1,5 @@
 <div *ngIf="isDataAvailable" class="profile-block">
-  <div class="flex-container space-between">
+  <div class="flex-container space-between profile-info-block">
     <div class="flex-item">
       <h1>Добро пожаловать, <strong>{{currentUser.firstName}} {{currentUser.lastName}}</strong></h1>
       <p>
@@ -7,7 +7,10 @@
       </p>
       <p> <span class="title">Электронная почта:</span> {{currentUser.email}}</p>
       <p> <span class="title">Логин:</span> {{currentUser.username}}</p>
-      <p> <span class="title">Роль:</span> {{role}}</p>
+      <p> <span class="title">Роль:</span> {{currentUser.role}}</p>
+      <a mat-button (click)="changeInfo()">Изменить информацию</a>
+      <a mat-button (click)="changePassword()">Изменить пароль</a>
+      <a mat-button (click)="users()">Списки пользователей</a>
     </div>
     <div class="flex-item flex-container ">
       <div class="flex-item" *ngFor="let item of currentUser.bank.deposits">
@@ -19,15 +22,23 @@
   </div>
 
   <div *ngIf="role == 'WITCHER'">
-    <p>
-      <span class="title">Принятые задания:</span>
-    </p>
-    <app-tasks></app-tasks>
+<!--    <p>-->
+<!--      <span class="title">Принятые задания:</span>-->
+<!--    </p>-->
+<!--    <app-tasks></app-tasks>-->
+    <mat-tab-group>
+      <mat-tab label="Задания">
+        <app-tasks></app-tasks>
+      </mat-tab>
+      <mat-tab label="Сделки">
+        <app-deals></app-deals>
+      </mat-tab>
+    </mat-tab-group>
   </div>
   <div *ngIf="role == 'USER'">
-    <p>
-      <span class="title">Ваши задания:</span>
-    </p>
     <app-tasks></app-tasks>
+  </div>
+  <div *ngIf="role == 'BLACKSMITH' || role == 'VENDOR'">
+    <app-deals></app-deals>
   </div>
 </div>

@@ -74,6 +74,20 @@ public class User {
     @JsonIgnoreProperties("witchersCompleted")
     private List<Task> tasksCompleted;
 
+    @ManyToMany(
+            mappedBy = "executors",
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnoreProperties("executors")
+    private List<Deal> deals;
+
+    @ManyToMany(
+            mappedBy = "executorsBookmarked",
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnoreProperties("executorsBookmarked")
+    private List<Deal> dealsBookmarked;
+
     @OneToOne(
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL
@@ -100,6 +114,16 @@ public class User {
     }
 
     public User(String username, Role role, String firstName, String lastName, String email, Bank bank){
+        this.username = username;
+        this.role = role;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.bank = bank;
+    }
+
+    public User(Long id, String username, Role role, String firstName, String lastName, String email, Bank bank){
+        this.id = id;
         this.username = username;
         this.role = role;
         this.firstName = firstName;

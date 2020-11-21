@@ -1,5 +1,5 @@
-import { Component, OnInit} from '@angular/core';
-import {TaskService} from '../../services/task-service';
+import {Component, OnInit} from '@angular/core';
+import {TaskService} from '../../services/task.service';
 import {Router} from '@angular/router';
 import {TaskViewModel} from '../../models/task/task-view-model';
 import {Constants} from '../../utils/constants';
@@ -114,6 +114,6 @@ export class TasksComponent implements OnInit {
   }
 
   add(): void {
-    this.router.navigate(['add']).then(() => console.log(Constants.NAVIGATED));
+    this.router.navigate(['add_task']).then(() => console.log(Constants.NAVIGATED));
   }
 }

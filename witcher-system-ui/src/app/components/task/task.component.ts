@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
-import {TaskService} from '../../services/task-service';
+import {TaskService} from '../../services/task.service';
 import {TaskViewModel} from '../../models/task/task-view-model';
 import {TaskUserModel} from '../../models/task/task-user-model';
 import {Constants} from '../../utils/constants';
@@ -72,11 +72,11 @@ export class TaskComponent implements OnInit {
   }
 
   edit(task: TaskViewModel): void {
-    this.router.navigate(['edit', task.id]).then(() => console.log(Constants.NAVIGATED));
+    this.router.navigate(['edit_task', task.id]).then(() => console.log(Constants.NAVIGATED));
   }
 
   delete(task: TaskViewModel): void {
-    this.router.navigate(['delete', task.id]).then(() => console.log(Constants.NAVIGATED));
+    this.router.navigate(['delete_task', task.id]).then(() => console.log(Constants.NAVIGATED));
   }
 
   complete(): void {
@@ -96,7 +96,7 @@ export class TaskComponent implements OnInit {
   }
 
   getCompletedWitchers(task: TaskViewModel): void {
-    this.router.navigate(['reward',  task.id]).then(() => console.log(Constants.NAVIGATED));
+    this.router.navigate(['reward_task',  task.id]).then(() => console.log(Constants.NAVIGATED));
   }
 
   backToTasks(): void {
@@ -104,7 +104,7 @@ export class TaskComponent implements OnInit {
   }
 
   backToQuests(): void {
-    this.router.navigate(['quests']).then(() => console.log(Constants.NAVIGATED));
+    this.router.navigate(['profile']).then(() => console.log(Constants.NAVIGATED));
   }
 
   isContainsWitcher(witchers: TaskUserModel[]): boolean {

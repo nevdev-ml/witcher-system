@@ -47,6 +47,6 @@
     <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
   </div>
 </div>
-<div *ngIf="!isDataAvailable">
-  <p>На данный момент задание ещё никто не выполнил</p>
+<div *ngIf="!isDataAvailable" class="no-reward-block">
+  <p class="no-reward-text">На данный момент задание ещё никто не выполнил</p>
 </div>

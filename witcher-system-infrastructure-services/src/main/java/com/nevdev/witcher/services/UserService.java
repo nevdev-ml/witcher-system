@@ -1,7 +1,10 @@
 package com.nevdev.witcher.services;
 
 import com.nevdev.witcher.application.IUserService;
+import com.nevdev.witcher.core.Deal;
+import com.nevdev.witcher.core.Task;
 import com.nevdev.witcher.core.User;
+import com.nevdev.witcher.repository.TaskRepository;
 import com.nevdev.witcher.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +13,12 @@ import org.springframework.stereotype.Service;
 public class UserService implements IUserService {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    TaskService taskService;
+
+    @Autowired
+    DealService dealService;
 
     @Override
     public User find(String value) {
@@ -37,6 +46,20 @@ public class UserService implements IUserService {
 
     @Override
     public void delete(User model) {
+        for(Task task : taskService.getAll()){
+            if (task.getCustomerId().equals(model.getId())){
+                taskService.delete(task);
+            }
+        }
+        for(Deal deal : dealService.getAll()){
+            if (deal.getCustomerId().equals(model.getId())){
+                dealService.delete(deal);
+            }
+        }
+        model.setTasks(null);
+        model.setTasksCompleted(null);
+        model.setDeals(null);
+        model.setDealsBookmarked(null);
         userRepository.delete(model);
     }
 

@@ -1,0 +1,115 @@
+<div *ngIf="isDataAvailable" class="deal-block" fxLayout="column" fxLayoutAlign="center start">
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">Номер сделки:</span>
+    </div>
+    <div fxFlex>
+      <p>{{deal.id}}</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">Название:</span>
+    </div>
+    <div fxFlex>
+      <p>{{deal.title}}</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">Описание:</span>
+    </div>
+    <div fxFlex>
+      <p>{{deal.description}}</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">Дата создания:</span>
+    </div>
+    <div fxFlex>
+      <p>{{deal.createOn | date:'longDate'}}</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">Заказчик:</span>
+    </div>
+    <div fxFlex>
+      <p>{{deal.customer.firstName}} {{deal.customer.lastName}}</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container" *ngIf="deal.executor">
+    <div fxFlex="40">
+      <span class="title">Исполнитель:</span>
+    </div>
+    <div fxFlex>
+      <p>{{deal.executor.firstName}} {{deal.executor.lastName}}</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">Награда:</span>
+    </div>
+    <div fxFlex>
+      <p>{{deal.reward.reward}} {{deal.reward.type}}</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">C вычетом налога:</span>
+    </div>
+    <div fxFlex>
+      <p>{{deal.reward.tax}} {{deal.reward.type}}</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">Статус сделки:</span>
+    </div>
+    <div fxFlex>
+      <p *ngIf="deal.done">Выполнено</p>
+      <p *ngIf="!deal.done">Не выполнено</p>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="flex-container">
+    <div fxFlex="40">
+      <span class="title">Статус оплаты:</span>
+    </div>
+    <div fxFlex>
+      <p *ngIf="deal.paid">Оплачено</p>
+      <p *ngIf="!deal.paid">Не оплачено</p>
+    </div>
+  </div>
+
+  <button *ngIf="role === 'WITCHER' && !deal.done && !isContainsExecutor(deal.executors) && !isContainsExecutor(deal.executorsBookmarked)"
+          mat-raised-button color="primary" class="btn-block btn-block" (click)="accept()">Добавить сделку в закладки</button>
+  <button *ngIf="role === 'WITCHER' && !deal.done && (isContainsExecutor(deal.executors) || isContainsExecutor(deal.executorsBookmarked))"
+          mat-raised-button color="warn" class="btn-block btn-custom" (click)="cancel()">Удалить сделку из закладок</button>
+
+  <button *ngIf="role === 'WITCHER' && !deal.done && isContainsExecutor(deal.executorsBookmarked)"
+          mat-raised-button color="primary" class="btn-block btn-custom" (click)="complete()">Согласиться на сделку</button>
+  <button *ngIf="role === 'WITCHER' && !deal.done && isContainsExecutor(deal.executors)"
+          mat-raised-button color="warn" class="btn-block btn-custom" (click)="complete()">Отказаться от сделки</button>
+
+  <button *ngIf="(role === 'KING' || id == deal.customer.id) && !deal.done" mat-raised-button color="accent"
+          class="btn-block btn-custom" (click)="edit(deal)">Редактировать сделку</button>
+  <button *ngIf="(role === 'KING' || id == deal.customer.id) && !deal.done" mat-raised-button color="accent"
+          class="btn-block btn-custom" (click)="delete(deal)">Удалить сделку</button>
+  <button *ngIf="(role === 'KING' || id == deal.customer.id) && !deal.done" mat-raised-button color="accent"
+          class="btn-block btn-custom" (click)="getAcceptedExecutors(deal)">Список желающих</button>
+
+
+  <button mat-raised-button color="accent" class="btn-block btn-custom" (click)="backToDeals()">Список сделок</button>
+
+</div>

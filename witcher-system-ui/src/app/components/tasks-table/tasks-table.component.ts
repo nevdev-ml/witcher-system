@@ -3,7 +3,7 @@ import {TaskUserModel} from '../../models/task/task-user-model';
 import {Constants} from '../../utils/constants';
 import {MatTableDataSource} from '@angular/material/table';
 import {TaskViewModel} from '../../models/task/task-view-model';
-import {TaskService} from '../../services/task-service';
+import {TaskService} from '../../services/task.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {faCheckSquare, faExternalLinkAlt, faMinusSquare, faEdit, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 import {MatPaginator} from '@angular/material/paginator';
@@ -113,11 +113,11 @@ export class TasksTableComponent implements OnInit, OnChanges {
   }
 
   edit(task): void {
-    this.router.navigate(['edit', task.id]).then(() => console.log(Constants.NAVIGATED));
+    this.router.navigate(['edit_task', task.id]).then(() => console.log(Constants.NAVIGATED));
   }
 
   delete(task): void {
-    this.router.navigate(['delete', task.id]).then(() => console.log(Constants.NAVIGATED));
+    this.router.navigate(['delete_task', task.id]).then(() => console.log(Constants.NAVIGATED));
   }
 
   isContainsWitcher(witchers: TaskUserModel[]): boolean {

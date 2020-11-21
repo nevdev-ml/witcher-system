@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {TaskService} from '../../services/task-service';
+import {TaskService} from '../../services/task.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TaskUserModel} from '../../models/task/task-user-model';
 import {Constants} from '../../utils/constants';

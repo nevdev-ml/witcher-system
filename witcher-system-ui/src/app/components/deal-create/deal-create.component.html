@@ -1,0 +1,53 @@
+<div class="block-wrapper" fxLayout="row" fxLayoutAlign="center center">
+  <mat-card class="box">
+    <mat-card-header>
+      <mat-card-title>Создание сделки</mat-card-title>
+    </mat-card-header>
+
+    <form class="example-form" name="form" [formGroup]="form" (ngSubmit)="add()" novalidate>
+      <mat-error *ngIf="errorMessage">{{errorMessage}}</mat-error>
+
+      <mat-card-content>
+
+        <!-- Title -->
+        <mat-form-field class="example-full-width">
+          <mat-label>Название сделки</mat-label>
+          <input matInput placeholder="Название сделки" formControlName="title" required>
+          <mat-error *ngIf="form.controls['title'].invalid && form.controls['title'].touched">
+            Название сделки является обязательным полем
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Description -->
+        <mat-form-field class="example-full-width">
+          <mat-label>Описание сделки</mat-label>
+          <input matInput placeholder="Описание сделки" formControlName="description">
+        </mat-form-field>
+
+        <!-- Type -->
+        <app-select-dropdown [objectList]="type" [title]="titleType" (changed)="onChangedType($event)"></app-select-dropdown>
+
+        <!-- Currency -->
+        <app-select-dropdown [objectList]="currency" [title]="titleCurrency"  (changed)="onChangedCurrency($event)"></app-select-dropdown>
+
+        <!-- Reward -->
+        <mat-form-field class="example-full-width">
+          <mat-label>Введите сумму награды</mat-label>
+          <input matInput type="text" min="0" placeholder="Сумма награды" formControlName="checkedRewardValue" required>
+          <mat-error *ngIf="form.controls['checkedRewardValue'].hasError('min')">
+            Сумма награды должна быть только положительным значением
+          </mat-error>
+          <mat-error *ngIf="form.controls['checkedRewardValue'].hasError('pattern')">
+            Сумма награды должна быть числовым значением
+          </mat-error>
+          <mat-error *ngIf="form.controls['checkedRewardValue'].hasError('required')">
+            Сумма награды за заказ является обязательным полем
+          </mat-error>
+        </mat-form-field>
+
+      </mat-card-content>
+      <button mat-raised-button color="primary" class="btn-block btn-custom" type="submit">Создать сделку</button>
+      <button mat-raised-button color="accent" class="btn-block btn-custom" (click)="back()">Вернуться</button>
+    </form>
+  </mat-card>
+</div>

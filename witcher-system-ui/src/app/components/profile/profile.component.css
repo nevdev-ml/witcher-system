@@ -2,6 +2,10 @@
   background: white;
 }
 
+.profile-info-block {
+  padding: 15px;
+}
+
 .title {
   font-weight: 500;
 }

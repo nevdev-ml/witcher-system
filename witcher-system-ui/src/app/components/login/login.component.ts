@@ -47,13 +47,22 @@ export class LoginComponent implements OnInit {
           localStorage.setItem(Constants.ID, response.id);
           this.router.navigate(['/profile']).then(() => console.log('Success login'));
         }
-        // localStorage.setItem(Constants.TOKEN, response.token);
-        // localStorage.setItem(Constants.ROLES, response.authorities);
-        // localStorage.setItem(Constants.ID, response.id);
-        // this.router.navigate(['/profile']).then(() => console.log('Success login'));
       }, error => {
-        console.log(error);
-        this.errorMessage = 'Неверный логин или пароль';
+        if (error.hasOwnProperty('error')){
+          switch (error.error) {
+            case 'Failed to authenticate: Empty username or password':
+              this.errorMessage = 'Введите имя пользователя и пароль';
+              break;
+            case 'Failed to authenticate: Account is disabled':
+              this.errorMessage = 'Аккаунт заблокирован';
+              break;
+            default:
+              this.errorMessage = 'Неверный логин или пароль';
+              break;
+          }
+        } else{
+          this.errorMessage = 'Неверный логин или пароль';
+        }
       });
   }
 }

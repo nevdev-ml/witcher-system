@@ -3,6 +3,7 @@ package com.nevdev.witcher.controller;
 import com.nevdev.witcher.core.Authority;
 import com.nevdev.witcher.core.User;
 import com.nevdev.witcher.enums.Role;
+import com.nevdev.witcher.models.PasswordModifyModel;
 import com.nevdev.witcher.models.UserViewModel;
 import com.nevdev.witcher.services.AuthorityService;
 import com.nevdev.witcher.services.EmailService;
@@ -75,13 +76,16 @@ public class AccountController {
         }
         switch (user.getCheckedRole()){
             case "Торговец":
-                user.setRole(Role.BLACKSMITH);
+                user.setRole(Role.VENDOR);
                 break;
             case "Ремесленник":
-                user.setRole(Role.VENDOR);
+                user.setRole(Role.BLACKSMITH);
                 break;
             case "Ведьмак":
                 user.setRole(Role.WITCHER);
+                break;
+            case "Король":
+                user.setRole(Role.KING);
                 break;
             default:
                 user.setRole(Role.USER);
@@ -108,7 +112,8 @@ public class AccountController {
         JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
         Role role = Role.valueOf(((GrantedAuthority) ((ArrayList) user.getAuthorities()).get(0)).getAuthority());
         User dbUser = userService.findUserByEmail(user.getEmail());
-        return new User(user.getUsername(), role, user.getFirstName(), user.getLastName(), user.getEmail(), dbUser.getBank());
+        return new User(user.getId(), user.getUsername(), role, user.getFirstName(), user.getLastName(), user.getEmail(),
+                dbUser.getBank());
     }
 
 
@@ -117,12 +122,16 @@ public class AccountController {
                                                        Device device) throws AuthenticationException {
         if (authenticationRequest.getUsername() == null || authenticationRequest.getPassword() == null){
             logger.error("Failed to authenticate: Empty username or password");
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Failed to authenticate: Empty username or password", HttpStatus.BAD_REQUEST);
         }
         if (!new BCryptPasswordEncoder().matches(authenticationRequest.getPassword(),
                 userService.find(authenticationRequest.getUsername()).getPassword())) {
             logger.error("Failed to authenticate: Wrong username or password");
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Failed to authenticate: Wrong username or password", HttpStatus.BAD_REQUEST);
+        }
+        if (!userService.find(authenticationRequest.getUsername()).getEnabled()) {
+            logger.error("Failed to authenticate: Account is disabled");
+            return new ResponseEntity<>("Failed to authenticate: Account is disabled", HttpStatus.BAD_REQUEST);
         }
         if (device.isMobile()) {
             logger.info("Hello mobile user!");
@@ -183,7 +192,7 @@ public class AccountController {
         user.setResetToken(UUID.randomUUID().toString());
         userService.edit(user);
 
-        //TODO: Change
+        //TODO: Change port
         String angular_port = ":4200";
         String url = request.getScheme() + "://" + request.getServerName() + angular_port;
         String subject = "Запрос на сброс пароля";
@@ -223,5 +232,104 @@ public class AccountController {
         logger.info(user.getPassword());
         logger.info(user.getResetToken());
         return new ResponseEntity<>(userService.edit(user), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    public ResponseEntity<?> edit(@RequestBody UserViewModel user) {
+        User currentUser = userService.get(user.getId());
+        if (currentUser != null){
+            currentUser.setFirstName(user.getFirstName());
+            currentUser.setLastName(user.getLastName());
+            currentUser.setEmail(user.getEmail());
+            switch (user.getCheckedRole()){
+                case "Торговец":
+                    currentUser.setRole(Role.VENDOR);
+                    break;
+                case "Ремесленник":
+                    currentUser.setRole(Role.BLACKSMITH);
+                    break;
+                case "Ведьмак":
+                    currentUser.setRole(Role.WITCHER);
+                    break;
+                case "Король":
+                    currentUser.setRole(Role.KING);
+                    break;
+                default:
+                    currentUser.setRole(Role.USER);
+                    break;
+            }
+            Authority authority = new Authority();
+            authority.setRoleName(currentUser.getRole());
+            Authority userAuthority = authorityService.create(authority);
+            List<Authority> authoritiesList = new ArrayList<>();
+            authoritiesList.add(userAuthority);
+            currentUser.setAuthorities(authoritiesList);
+            userService.edit(currentUser);
+            List<String> authoritiesString = new ArrayList<>();
+            authoritiesList.forEach(item -> authoritiesString.add(item.getRoleName().toString()));
+            return new ResponseEntity<>(authoritiesString, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/edit-password", method = RequestMethod.POST)
+    public ResponseEntity<?> editPassword(@RequestBody PasswordModifyModel model) throws AuthenticationException {
+        User currentUser = userService.get(model.getUserId());
+        if (currentUser != null){
+            currentUser.setPassword(BCrypt.hashpw(model.getPassword(), BCrypt.gensalt()));
+            User updated = userService.edit(currentUser);
+            return new ResponseEntity<>(updated, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/users", method = RequestMethod.POST)
+    public ResponseEntity<?> users(@RequestHeader("Authorization") String token){
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        User user = userService.find(username);
+        if(user != null && user.getRole() == Role.KING){
+            logger.info("Get all users");
+            return ResponseEntity.ok(userService.getAll());
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public ResponseEntity<?> delete(@RequestHeader("Authorization") String token, @RequestBody Long userId){
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        User king = userService.find(username);
+        User userDeleted = userService.get(userId);
+        if(king != null && userDeleted != null && king.getRole() == Role.KING){
+            logger.info("Delete user");
+            userService.delete(userDeleted);
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/enable", method = RequestMethod.POST)
+    public ResponseEntity<?> enable(@RequestHeader("Authorization") String token, @RequestBody Long userId){
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        User king = userService.find(username);
+        User userUpd = userService.get(userId);
+        if(king != null && userUpd != null && king.getRole() == Role.KING){
+            logger.info("Enable user");
+            userUpd.setEnabled(true);
+            return ResponseEntity.ok(userService.edit(userUpd));
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/disable", method = RequestMethod.POST)
+    public ResponseEntity<?> disable(@RequestHeader("Authorization") String token, @RequestBody Long userId){
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        User king = userService.find(username);
+        User userUpd = userService.get(userId);
+        if(king != null && userUpd != null && king.getRole() == Role.KING){
+            logger.info("Disable user");
+            userUpd.setEnabled(false);
+            return ResponseEntity.ok(userService.edit(userUpd));
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 }

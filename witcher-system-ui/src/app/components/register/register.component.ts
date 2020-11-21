@@ -18,13 +18,10 @@ export class RegisterComponent implements OnInit {
   hide = true;
   errorMessage: string;
   checkedValue: string;
-  roles: ObjectBase[] = [
-    {name: 'Ведьмак'},
-    {name: 'Пользователь'},
-    {name: 'Ремесленник'},
-    {name: 'Торговец'},
-  ];
+  roles: ObjectBase[];
   title = 'Роль';
+  formTitle: string;
+  formButton: string;
 
 
   constructor(public accountService: AccountService, public router: Router) {
@@ -45,14 +42,35 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    if (this.router.url === '/register'){
+      this.formTitle = 'Регистрация';
+      this.formButton = 'Создать аккаунт';
+      this.roles = [
+        {name: 'Ведьмак'},
+        {name: 'Пользователь'},
+        {name: 'Ремесленник'},
+        {name: 'Торговец'},
+      ];
+    } else{
+      this.formTitle = 'Добавление пользователя';
+      this.formButton = 'Создать пользователя';
+      this.roles = [
+        {name: 'Ведьмак'},
+        {name: 'Пользователь'},
+        {name: 'Ремесленник'},
+        {name: 'Торговец'},
+        {name: 'Король'},
+      ];
+    }
+  }
 
   onChangedRole(checkedValue: string) {
     this.checkedValue = checkedValue;
   }
 
   register() {
-    if (this.form.invalid) {
+    if (this.form.invalid || this.isValidForm()) {
       return;
     }
     this.user.firstName = this.form.get('firstName').value;
@@ -62,11 +80,19 @@ export class RegisterComponent implements OnInit {
     this.user.password = this.form.get('password').value;
     this.user.checkedRole = this.checkedValue;
     this.accountService.register(this.user).subscribe(() => {
+      if (this.router.url === '/register'){
         this.router.navigate(['/login']).then(() => console.log(Constants.SUCCESS_REGISTER));
+      } else{
+        this.router.navigate(['/users']).then(() => console.log(Constants.SUCCESS_REGISTER));
+      }
       }, err => {
         console.log(err);
         this.errorMessage = 'Данный логин уже существует.';
       }
     );
+  }
+
+  isValidForm(){
+    return !(this.user.checkedRole === undefined);
   }
 }

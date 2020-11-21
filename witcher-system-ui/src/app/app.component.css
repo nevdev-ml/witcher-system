@@ -6,3 +6,7 @@
   position: relative;
   margin-top: 64px;
 }
+.mobile-menu {
+  position: absolute;
+  top: 56px;
+}

@@ -3,11 +3,20 @@
   position: absolute;
   top: 50px;
   padding: 50px;
-  left: 40%;
+  left: calc(50% - 250px);
+  width: 500px;
 }
+
 .title {
   font-weight: 500;
 }
+
 .flex-container {
-  width: 100%
+  width: 100%;
+}
+
+.btn-custom {
+  width: 250px;
+  margin: 5px auto;
+  padding: 5px;
 }

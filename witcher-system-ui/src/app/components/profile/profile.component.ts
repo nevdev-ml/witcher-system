@@ -11,7 +11,7 @@ import {Constants} from '../../utils/constants';
   encapsulation: ViewEncapsulation.None
 })
 export class ProfileComponent implements OnInit {
-  currentUser: UserView = new UserView();
+  currentUser: UserView;
   role = localStorage.getItem(Constants.ROLES);
   isDataAvailable = false;
 
@@ -36,5 +36,15 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  changeInfo(){
+    this.router.navigate(['change_info'], {state: {data: this.currentUser}}).then(() => console.log(Constants.NAVIGATED));
+  }
 
+  changePassword(){
+    this.router.navigate(['change_password']).then(() => console.log(Constants.NAVIGATED));
+  }
+
+  users(){
+    this.router.navigate(['users']).then(() => console.log(Constants.NAVIGATED));
+  }
 }

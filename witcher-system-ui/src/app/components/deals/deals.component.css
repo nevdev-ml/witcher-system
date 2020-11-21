@@ -1,0 +1,8 @@
+.white-block {
+  background: white;
+}
+
+.add-block {
+  display: flex;
+  flex-direction: row-reverse;
+}

@@ -1,0 +1,49 @@
+<div [hidden]="!isDataAvailable" class="white-block">
+  <div class="add-block">
+    <fa-icon *ngIf="isShop && (role == 'VENDOR' || role == 'KING')" [icon]="faAdd" [fixedWidth]="true" size="3x" (click)="add()"></fa-icon>
+    <fa-icon *ngIf="isWorkshop && (role == 'BLACKSMITH' || role == 'KING')" [icon]="faAdd" [fixedWidth]="true" size="3x" (click)="add()"></fa-icon>
+  </div>
+  <div class="mat-elevation-z8">
+    <div *ngIf="!isWitcherProfile && !isCustomerProfile">
+      <app-deals-table [dealsList]="this.activeDeals"></app-deals-table>
+    </div>
+    <div *ngIf="isCustomerProfile">
+      <mat-tab-group>
+        <mat-tab label="Текущие сделки">
+          <ng-template matTabContent>
+            <app-deals-table [dealsList]="this.activeDeals"></app-deals-table>
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="Переговоры">
+          <ng-template matTabContent>
+            <app-deals-table [dealsList]="this.successDeals"></app-deals-table>
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="Совершенные сделки">
+          <ng-template matTabContent>
+            <app-deals-table [dealsList]="this.bookmarkedDeals"></app-deals-table>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+    <div *ngIf="isWitcherProfile">
+      <mat-tab-group>
+        <mat-tab label="Закладки">
+          <ng-template matTabContent>
+            <app-deals-table [dealsList]="this.activeDeals"></app-deals-table>
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="Совершенные сделки">
+          <ng-template matTabContent>
+            <app-deals-table [dealsList]="this.successDeals"></app-deals-table>
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="Архивные сделки">
+          <ng-template matTabContent>
+            <app-deals-table [dealsList]="this.bookmarkedDeals"></app-deals-table>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 <div class="block-wrapper" fxLayout="row" fxLayoutAlign="center center">
   <mat-card class="box">
     <mat-card-header>
-      <mat-card-title>Регистрация</mat-card-title>
+      <mat-card-title>{{formTitle}}</mat-card-title>
     </mat-card-header>
 
     <form class="example-form" name="form" [formGroup]="form" (ngSubmit)="register()" novalidate>
@@ -55,7 +55,7 @@
           <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide" type='button'>
             <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
-          <mat-error *ngIf="form.controls['password'].hasError('minLength')">
+          <mat-error *ngIf="form.controls['password'].hasError('minlength')">
             Пароль должен содержать хотя бы 6 символов
           </mat-error>
           <mat-error *ngIf="form.controls['password'].hasError('required')">
@@ -82,8 +82,8 @@
         <app-select-dropdown [objectList]="roles" [title]="title" (changed)="onChangedRole($event)"></app-select-dropdown>
       </mat-card-content>
 
-      <button mat-stroked-button color="accent" class="btn-block" type="submit">Создать аккаунт</button>
-      <button mat-stroked-button class="btn-block" [routerLink]="['/']">Вернуться</button>
+      <button mat-raised-button color="primary" class="btn-block btn-custom" type="submit">{{formButton}}</button>
+      <button mat-raised-button color="accent" class="btn-block btn-custom" [routerLink]="['/']">Вернуться</button>
 
     </form>
   </mat-card>

@@ -47,6 +47,17 @@ import { TaskEditComponent } from './components/task-edit/task-edit.component';
 import { TaskDeleteComponent } from './components/task-delete/task-delete.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import { TasksTableComponent } from './components/tasks-table/tasks-table.component';
+import { DealsComponent } from './components/deals/deals.component';
+import { DealsTableComponent } from './components/deals-table/deals-table.component';
+import { DealComponent } from './components/deal/deal.component';
+import { DealCreateComponent } from './components/deal-create/deal-create.component';
+import { DealDeleteComponent } from './components/deal-delete/deal-delete.component';
+import { DealEditComponent } from './components/deal-edit/deal-edit.component';
+import { DealRewardComponent } from './components/deal-reward/deal-reward.component';
+import { UrlPermissionVendorBlacksmithKing } from './permission/url-permission-vendor-blacksmith-king';
+import { ChangeInfoComponent } from './components/change-info/change-info.component';
+import { UsersComponent } from './components/users/users.component';
+import { UsersTableComponent } from './components/users-table/users-table.component';
 registerLocaleData(localeRu);
 
 @NgModule({
@@ -65,7 +76,17 @@ registerLocaleData(localeRu);
     TaskRewardComponent,
     TaskEditComponent,
     TaskDeleteComponent,
-    TasksTableComponent
+    TasksTableComponent,
+    DealsComponent,
+    DealsTableComponent,
+    DealComponent,
+    DealCreateComponent,
+    DealDeleteComponent,
+    DealEditComponent,
+    DealRewardComponent,
+    ChangeInfoComponent,
+    UsersComponent,
+    UsersTableComponent
   ],
   imports: [
     BrowserModule,
@@ -91,7 +112,7 @@ registerLocaleData(localeRu);
     MatTabsModule
   ],
   providers: [AuthService, AccountService, UrlPermission, UrlPermissionUser, UrlPermissionKing, UrlPermissionWitcher, UrlPermissionUserKing,
-    { provide: LOCALE_ID, useValue: 'ru' }],
+    UrlPermissionVendorBlacksmithKing, { provide: LOCALE_ID, useValue: 'ru' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

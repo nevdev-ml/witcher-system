@@ -1,0 +1,8 @@
+.btn-custom {
+  margin: 5px auto;
+  padding: 5px;
+}
+
+.btn-forgot span {
+  float: right;
+}

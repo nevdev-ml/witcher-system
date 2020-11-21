@@ -32,8 +32,9 @@
 
       </mat-card-content>
 
-      <button mat-stroked-button color="accent" class="btn-block" type="submit">Войти</button>
-      <button mat-stroked-button class="btn-block" [routerLink]="['/register']">Зарегистрироваться</button>
+      <button mat-raised-button color="primary" class="btn-block btn-custom" type="submit">Войти</button>
+      <button mat-raised-button color="accent" class="btn-block btn-custom" [routerLink]="['/register']">Зарегистрироваться</button>
+      <button mat-button class="btn-block btn-custom btn-forgot" [routerLink]="['/forgot']">Забыли пароль?</button>
     </form>
   </mat-card>
 </div>

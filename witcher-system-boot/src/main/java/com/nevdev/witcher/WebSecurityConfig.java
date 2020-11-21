@@ -90,12 +90,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/account/register","/account/login", "/account/logout", "/account/forgot/**", "/account/reset/**").permitAll()
-                .antMatchers("/task/details/**", "/task/tasks").authenticated()//.permitAll()//.hasAuthority("USER")
+                .antMatchers("/account/register","/account/login", "/account/logout", "/account/forgot/**",
+                        "/account/reset/**", "/account/edit", "/account/edit-password").permitAll()
+                .antMatchers("/task/details/**", "/task/tasks", "/deal/deals", "/deal/details/**",
+                        "/deal/shop", "/deal/workshop").authenticated()
                 .antMatchers("/task/add", "/task/customer-quests", "/task/reward/**", "/task/refuse/**",
                         "/task/delete/**", "/task/edit/**", "/task/delete/**").hasAnyAuthority("USER", "KING")
-                .antMatchers("/task/accept/**", "/task/cancel/**", "/task/quests").hasAuthority("WITCHER")
-//                .antMatchers().permitAll()
+                .antMatchers("/deal/add", "/deal/customer-quests", "/deal/reward/**", "/deal/refuse/**",
+                        "/deal/delete/**", "/deal/edit/**", "/deal/delete/**").hasAnyAuthority("VENDOR", "BLACKSMITH", "KING")
+                .antMatchers("/task/accept/**", "/task/cancel/**", "/task/quests", "/deal/accept/**",
+                        "/deal/cancel/**", "/deal/quests").hasAuthority("WITCHER")
+                .antMatchers("/account/users", "/account/delete", "/account/enable", "/account/disable").hasAuthority("KING")
                 .anyRequest().hasAnyAuthority("USER", "KING", "BLACKSMITH", "VENDOR", "WITCHER")
                 // Enable h2 console
                 .and().headers().frameOptions().disable();

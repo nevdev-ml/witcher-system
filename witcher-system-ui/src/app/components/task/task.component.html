@@ -124,21 +124,26 @@
   </div>
 
   <button *ngIf="role == 'WITCHER' && !task.done && !isContainsWitcher(task.witchers) && !isContainsWitcher(task.witchersCompleted)"
-          mat-stroked-button class="btn-block" (click)="accept()">Принять задание</button>
+          mat-raised-button color="primary" class="btn-block btn-custom" (click)="accept()">Принять заказ</button>
   <button *ngIf="role == 'WITCHER' && !task.done && (isContainsWitcher(task.witchers) || isContainsWitcher(task.witchersCompleted))"
-          mat-stroked-button class="btn-block" (click)="cancel()">Отменить задание</button>
+          mat-raised-button color="warn" class="btn-block btn-custom" (click)="cancel()">Отменить заказ</button>
   <button *ngIf="role == 'WITCHER' && !task.done && isContainsWitcher(task.witchers)"
-          mat-stroked-button class="btn-block" (click)="complete()">Задание выполнено</button>
+          mat-raised-button color="primary" class="btn-block btn-custom" (click)="complete()">Заказ выполнен</button>
   <button *ngIf="role == 'WITCHER' && !task.done && isContainsWitcher(task.witchersCompleted)"
-          mat-stroked-button class="btn-block" (click)="complete()">Задание не выполнено</button>
+          mat-raised-button color="warn" class="btn-block btn-custom" (click)="complete()">Заказ не выполнен</button>
 
-  <button *ngIf="(role == 'KING' || id == task.customer.id) && !task.done" mat-stroked-button class="btn-block" (click)="edit(task)">Редактировать задание</button>
-  <button *ngIf="(role == 'KING' || id == task.customer.id) && !task.done" mat-stroked-button class="btn-block" (click)="delete(task)">Удалить задание</button>
-  <button *ngIf="(role == 'KING' || id == task.customer.id) && !task.done" mat-stroked-button class="btn-block" (click)="getCompletedWitchers(task)">Список выполнивших задание</button>
+  <button *ngIf="(role == 'KING' || id == task.customer.id) && !task.done" mat-raised-button color="primary"
+          class="btn-block btn-custom" (click)="edit(task)">Редактировать заказ</button>
+  <button *ngIf="(role == 'KING' || id == task.customer.id) && !task.done" mat-raised-button color="primary"
+          class="btn-block btn-custom" (click)="delete(task)">Удалить заказ</button>
+  <button *ngIf="(role == 'KING' || id == task.customer.id) && !task.done" mat-raised-button color="primary"
+          class="btn-block btn-custom" (click)="getCompletedWitchers(task)">Список выполнивших заказ</button>
 
 
-  <button mat-stroked-button class="btn-block" (click)="backToTasks()">Список заданий</button>
-  <button *ngIf="role == 'WITCHER'" mat-stroked-button class="btn-block" (click)="backToQuests()">Список принятых заданий</button>
-  <button *ngIf="role == 'USER'" mat-stroked-button class="btn-block" (click)="backToQuests()">Список моих заданий</button>
+  <button mat-raised-button class="btn-block btn-custom" color="accent" (click)="backToTasks()">Список заказов</button>
+  <button *ngIf="role == 'WITCHER'" mat-raised-button color="accent" class="btn-block btn-custom"
+          (click)="backToQuests()">Список принятых заказов</button>
+  <button *ngIf="role == 'USER'" mat-raised-button color="accent" class="btn-block btn-custom"
+          (click)="backToQuests()">Список моих заказов</button>
 
 </div>
