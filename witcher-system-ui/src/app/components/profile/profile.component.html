@@ -10,7 +10,7 @@
       <p> <span class="title">Роль:</span> {{currentUser.role}}</p>
       <a mat-button (click)="changeInfo()">Изменить информацию</a>
       <a mat-button (click)="changePassword()">Изменить пароль</a>
-      <a mat-button (click)="users()">Списки пользователей</a>
+      <a *ngIf="role == 'KING'" mat-button (click)="users()">Списки пользователей</a>
     </div>
     <div class="flex-item flex-container ">
       <div class="flex-item" *ngFor="let item of currentUser.bank.deposits">
