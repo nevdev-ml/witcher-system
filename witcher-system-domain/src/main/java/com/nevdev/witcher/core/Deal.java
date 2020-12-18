@@ -61,7 +61,7 @@ public class Deal {
     @ManyToMany(
             fetch = FetchType.LAZY
     )
-    @JsonIgnoreProperties("dealsBookmarked")
+    @JsonIgnoreProperties({"dealsBookmarked", "tasksCompleted", "tasks"})
     @JoinTable(
             name = "DEAL_USER_BOOKMARKED",
             joinColumns = {@JoinColumn(name = "DEAL_ID")},
@@ -71,7 +71,7 @@ public class Deal {
     @ManyToMany(
             fetch = FetchType.LAZY
     )
-    @JsonIgnoreProperties("deals")
+    @JsonIgnoreProperties({"deals", "tasksCompleted", "tasks"})
     @JoinTable(
             name = "DEAL_USER",
             joinColumns = {@JoinColumn(name = "DEAL_ID")},

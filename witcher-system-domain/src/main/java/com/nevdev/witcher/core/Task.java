@@ -59,7 +59,7 @@ public class Task {
     @ManyToMany(
             fetch = FetchType.LAZY
     )
-    @JsonIgnoreProperties("tasksCompleted")
+    @JsonIgnoreProperties({"tasksCompleted", "deals", "dealsBookmarked"})
     @JoinTable(
             name = "TASK_WITCHER_COMPLETED",
             joinColumns = {@JoinColumn(name = "TASK_ID")},
@@ -69,7 +69,7 @@ public class Task {
     @ManyToMany(
             fetch = FetchType.LAZY
     )
-    @JsonIgnoreProperties("tasks")
+    @JsonIgnoreProperties({"tasks", "deals", "dealsBookmarked"})
     @JoinTable(
             name = "TASK_WITCHER",
             joinColumns = {@JoinColumn(name = "TASK_ID")},

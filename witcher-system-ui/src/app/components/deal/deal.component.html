@@ -93,7 +93,7 @@
   </div>
 
   <button *ngIf="role === 'WITCHER' && !deal.done && !isContainsExecutor(deal.executors) && !isContainsExecutor(deal.executorsBookmarked)"
-          mat-raised-button color="primary" class="btn-block btn-block" (click)="accept()">Добавить сделку в закладки</button>
+          mat-raised-button color="primary" class="btn-block btn-custom" (click)="accept()">Добавить сделку в закладки</button>
   <button *ngIf="role === 'WITCHER' && !deal.done && (isContainsExecutor(deal.executors) || isContainsExecutor(deal.executorsBookmarked))"
           mat-raised-button color="warn" class="btn-block btn-custom" (click)="cancel()">Удалить сделку из закладок</button>
 

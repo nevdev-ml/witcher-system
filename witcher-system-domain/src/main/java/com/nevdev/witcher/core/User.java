@@ -64,28 +64,28 @@ public class User {
             mappedBy = "witchers",
             fetch = FetchType.LAZY
     )
-    @JsonIgnoreProperties("witchers")
+    @JsonIgnoreProperties({"witchers", "executors", "executorsBookmarked"})
     private List<Task> tasks;
 
     @ManyToMany(
             mappedBy = "witchersCompleted",
             fetch = FetchType.LAZY
     )
-    @JsonIgnoreProperties("witchersCompleted")
+    @JsonIgnoreProperties({"witchersCompleted", "executors", "executorsBookmarked"})
     private List<Task> tasksCompleted;
 
     @ManyToMany(
             mappedBy = "executors",
             fetch = FetchType.LAZY
     )
-    @JsonIgnoreProperties("executors")
+    @JsonIgnoreProperties({"executors", "witchersCompleted", "witchers"})
     private List<Deal> deals;
 
     @ManyToMany(
             mappedBy = "executorsBookmarked",
             fetch = FetchType.LAZY
     )
-    @JsonIgnoreProperties("executorsBookmarked")
+    @JsonIgnoreProperties({"executorsBookmarked", "witchersCompleted", "witchers"})
     private List<Deal> dealsBookmarked;
 
     @OneToOne(
