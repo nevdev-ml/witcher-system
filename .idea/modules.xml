@@ -2,8 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/witcher-system.iml" filepath="$PROJECT_DIR$/witcher-system.iml" />
+      <module fileurl="file://$PROJECT_DIR$/witcher-system-application/witcher-system-application.iml" filepath="$PROJECT_DIR$/witcher-system-application/witcher-system-application.iml" />
+      <module fileurl="file://$PROJECT_DIR$/witcher-system-boot/witcher-system-boot.iml" filepath="$PROJECT_DIR$/witcher-system-boot/witcher-system-boot.iml" />
       <module fileurl="file://$PROJECT_DIR$/witcher-system-domain/witcher-system-domain.iml" filepath="$PROJECT_DIR$/witcher-system-domain/witcher-system-domain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/witcher-system-infrastructure-data/witcher-system-infrastructure-data.iml" filepath="$PROJECT_DIR$/witcher-system-infrastructure-data/witcher-system-infrastructure-data.iml" />
       <module fileurl="file://$PROJECT_DIR$/witcher-system-infrastructure-services/witcher-system-infrastructure-services.iml" filepath="$PROJECT_DIR$/witcher-system-infrastructure-services/witcher-system-infrastructure-services.iml" />
+      <module fileurl="file://$PROJECT_DIR$/witcher-system-presentation/witcher-system-presentation.iml" filepath="$PROJECT_DIR$/witcher-system-presentation/witcher-system-presentation.iml" />
       <module fileurl="file://$PROJECT_DIR$/witcher-system-ui/witcher-system-ui.iml" filepath="$PROJECT_DIR$/witcher-system-ui/witcher-system-ui.iml" />
     </modules>
   </component>

@@ -5,3 +5,7 @@
 /witcher-system-infrastructure-data/target/
 /witcher-system-infrastructure-services/target/
 /witcher-system-presentation/target/
+
+*.plantuml
+*.sh
+*.yml

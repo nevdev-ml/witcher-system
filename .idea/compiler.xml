@@ -2,7 +2,6 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -16,11 +15,13 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="test" target="1.8" />
-      <module name="witcher-system-controller" target="1.8" />
+      <module name="witcher-system" target="1.8" />
+      <module name="witcher-system-application" target="1.8" />
+      <module name="witcher-system-boot" target="1.8" />
       <module name="witcher-system-domain" target="1.8" />
+      <module name="witcher-system-infrastructure-data" target="1.8" />
       <module name="witcher-system-infrastructure-services" target="1.8" />
-      <module name="witcher-system-infrastructure-services (1)" target="1.8" />
+      <module name="witcher-system-presentation" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -30,7 +31,6 @@
       <module name="witcher-system-domain" options="-parameters" />
       <module name="witcher-system-infrastructure-data" options="-parameters" />
       <module name="witcher-system-infrastructure-services" options="-parameters" />
-      <module name="witcher-system-infrastructure-services (1)" options="-parameters" />
       <module name="witcher-system-presentation" options="-parameters" />
     </option>
   </component>
