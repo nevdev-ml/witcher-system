@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 
-@Entity
+@Entity(name = "Users")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
